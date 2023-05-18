@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- JAVA와 연결할 Mapper 파일 설정 -->
+<mapper namespace="com.example.pathfinder.Mapper.ILoginMapper">
+
+
+    <select id="login" parameterType="map" resultType="UserDTO">
+        select *
+        from USER_INFO
+        where USER_ID = #{userid} and USER_PW = #{userpwd}
+    </select>
+    <select id="findId" parameterType="UserDTO" resultType="UserDTO">
+        select USER_ID from USER_INFO where USER_MAILID = #{user_mailid} and USER_MAILDOMAIN = #{user_maildomain}
+    </select>
+    <select id="findIdCheck" resultType="int" parameterType="UserDTO">
+        select count(*) from USER_INFO where USER_MAILID = #{user_mailid} and USER_MAILDOMAIN = #{user_maildomain}
+    </select>
+    <select id="findPwCheck" resultType="int" parameterType="UserDTO">
+        select count(*) from USER_INFO where USER_MAILID = #{user_mailid} and USER_MAILDOMAIN = #{user_maildomain} and USER_ID = #{user_id}
+    </select>
+    <update id="resetPw" parameterType="UserDTO">
+        update USER_INFO set USER_PW = #{user_pw} where USER_MAILID = #{user_mailid} and USER_MAILDOMAIN = #{user_maildomain} and USER_ID = #{user_id}
+    </update>
+    <delete id="deleteUser" parameterType="UserDTO">
+        delete from USER_INFO where USER_NO =#{user_no}
+    </delete>
+
+</mapper>
