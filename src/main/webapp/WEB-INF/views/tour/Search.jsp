@@ -112,7 +112,8 @@
 
         %>
         <img src="<%=rDTO.getFirstimage2()%>" style="width:150px;height:150px;"/>
-        <a href="/course/courseDetail?coursename=<%=rDTO.getTitle()%>"><%=rDTO.getTitle()%></a>
+        <a href="/course/courseDetail?title=<%=rDTO.getTitle()%>"><%=rDTO.getTitle()%></a>
+        <a href="/course/courseDetail?contentid=<%rDTO.getContentid()%>&contentTypeId=<%rDTO.getContentTypeId()%>"><%=rDTO.getTitle()%></a>
 
         <%}%>
         </div>

@@ -9,13 +9,12 @@ import java.io.BufferedReader;
 import java.io.IOException;
 
 @Slf4j
-public class ApiFesta {
-    public static StringBuilder main(String areaCode) throws IOException {
-        String Today = com.example.pathfinder.util.Today.today();
-        StringBuilder urlBuilder = new StringBuilder("https://apis.data.go.kr/B551011/KorService1/searchFestival1"); /*URL*/
+public class ApiSearchDetail {
+    public static StringBuilder main(String contetid) throws IOException {
+        StringBuilder urlBuilder = new StringBuilder("https://apis.data.go.kr/B551011/KorService1/detailIntro1"); /*URL*/
         urlBuilder.append("?" + URLEncoder.encode("serviceKey","UTF-8") + "=I%2FxoZkq49gH4V%2FtiPHP7zSEY%2B45KWXDDYkv%2B6uVYUE%2B5vDiH2y46yBbVo94ZcANN9aKxvYFmzkbPnwet5SdQBw%3D%3D"); /*Service Key*/
-        urlBuilder.append("&" + URLEncoder.encode("EventStartDate","UTF-8") + "=" + Today); /*축제시작일*/
-        urlBuilder.append("&" + URLEncoder.encode("AreaCode","UTF-8") + "=" + areaCode); /*지역코드*/
+        urlBuilder.append("&" + URLEncoder.encode("ContentId","UTF-8") + "=" + contetid); /*컨텐츠 id*/
+        urlBuilder.append("&" + URLEncoder.encode("ContentTypeId","UTF-8") + "=" + "12"); /* 컨텐츠 타입 id */
         urlBuilder.append("&" + URLEncoder.encode("MobileOS","UTF-8") + "=" + URLEncoder.encode("and", "UTF-8")); /*OS*/
         urlBuilder.append("&" + URLEncoder.encode("MobileApp","UTF-8") + "=" + URLEncoder.encode("pathfinder", "UTF-8")); /*이름(XML/JSON) Default: XML*/
         urlBuilder.append("&" + URLEncoder.encode("_type","UTF-8") + "=" + URLEncoder.encode("json", "UTF-8")); /*요청자료형식(XML/JSON) Default: XML*/
@@ -43,4 +42,3 @@ public class ApiFesta {
     }
 
 }
-

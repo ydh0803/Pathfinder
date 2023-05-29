@@ -2,30 +2,28 @@ package com.example.pathfinder.controller;
 
 import com.example.pathfinder.dto.ApiDTO;
 import com.example.pathfinder.dto.FestaDTO;
+import com.example.pathfinder.dto.SearchDTO;
 import com.example.pathfinder.util.ApiFesta;
 import com.example.pathfinder.util.ApiParse;
 import com.example.pathfinder.util.CmmUtil;
-import com.example.pathfinder.util.Today;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.bson.json.JsonObject;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.json.simple.parser.JSONParser;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 @Slf4j
@@ -82,13 +80,14 @@ public class ApiController {
         return "tour/map";
     }
 
-    @GetMapping("festa")
-    public String festa(HttpServletRequest request, Model model) throws IOException, ParseException {
+    @GetMapping("/tour/Festa")
+    @ResponseBody
+    public List<FestaDTO> festa(HttpServletRequest request, Model model) throws IOException, ParseException {
 
         log.info(this.getClass().getName() + ".festamap start");
-        String date = CmmUtil.nvl(request.getParameter("Today"));
-
-        String api = String.valueOf(ApiFesta.main(date));
+        String areaCode = CmmUtil.nvl(request.getParameter("area"));
+        String api = String.valueOf(ApiFesta.main(areaCode));
+        log.info(areaCode);
 
         JSONParser jsonParser = new JSONParser();
         JSONObject obj = (JSONObject) jsonParser.parse(api);
@@ -112,20 +111,56 @@ public class ApiController {
             rDTO.setTel((String) array.get("tel"));
             rDTO.setAddr1((String) array.get("addr1"));
             rDTO.setAddr2((String) array.get("addr2"));
-            rDTO.setAddr2((String) array.get("eventstartdate"));
-            rDTO.setAddr2((String) array.get("eventenddate"));
-            rDTO.setAddr2((String) array.get("mapx"));
-            rDTO.setAddr2((String) array.get("mapy"));
+            rDTO.setEventenddate((String) array.get("eventstartdate"));
+            rDTO.setEventstartdate((String) array.get("eventenddate"));
+            rDTO.setMapx((String) array.get("mapx"));
+            rDTO.setMapy((String) array.get("mapy"));
 
             list.add(rDTO);
 
         }
+        log.info("dddd");
+        return list;
+    }
+    @GetMapping("/fiesta")
+    public String fiesta() {
 
-        log.info(list.toString());
-        model.addAttribute("list", list);
+        return "tour/Festa";
+    }
 
+    @PostMapping("/area")
+    public String signUp(HttpServletRequest request, Model model) {
 
-        return "/tour/Festa";
+        log.info(this.getClass().getName() + ".AreaCode Select start");
+
+        String ac = "";
+
+        try {
+
+            String areaCode = CmmUtil.nvl(request.getParameter("areaCode"));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        } return "/tour/Festa";
+    }
+
+    @GetMapping(value = "/tour/SearchDetail")
+    public String SearchDetail(HttpServletRequest request, HttpSession session, Model model) throws Exception {
+        String contentid = CmmUtil.nvl(request.getParameter("contentid"));
+        log.info(contentid);
+        ApiDTO pDTO = new ApiDTO();
+        pDTO.setContentid(contentid);
+        String contenttypeid = CmmUtil.nvl(request.getParameter("contenttypeid"));
+        pDTO.setContenttypeid(contenttypeid);
+        SearchDTO iDTO = new SearchDTO();
+//        iDTO.setContentid(contentid);
+//                ApiDTO rDTO = courseService.getCourseByName(contentid);
+//        SearchDTO mDTO = imageService.getImg(iDTO);
+//        List<SearchDTO> rList = bikeService.selectReview(iDTO);
+//
+//        model.addAttribute("rDTO", rDTO);
+//        model.addAttribute("iDTO",mDTO);
+//        model.addAttribute("rList", rList);
+        return "/tour/SearchDetail";
     }
 }
 

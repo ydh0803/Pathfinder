@@ -4,7 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 public class Today {
-    public static void main(String args[]){
+    public static String today(){
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 
@@ -15,6 +15,8 @@ public class Today {
 
 
         System.out.println("Today=" + strToday);
+
+        return strToday;
 
     }
 

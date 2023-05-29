@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class ApiDTO {
+public class SearchDTO {
     private String addr2;
     private String addr1;
     private String contentid;
@@ -16,8 +16,8 @@ public class ApiDTO {
     private String contenttypeid;
     private String sigungucode;
     private String tel;
+    private String mapx;
+    private String mapy;
 
 
-    public void getContentTypeId() {
-    }
 }

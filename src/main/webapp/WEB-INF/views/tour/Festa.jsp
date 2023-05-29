@@ -1,30 +1,15 @@
-        <%@ page import="com.example.pathfinder.dto.FestaDTO" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ page import="com.example.pathfinder.dto.FestaDTO" %>
 <%@ page import="java.util.List" %>
+<%@ page import="com.example.pathfinder.util.ApiFesta" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
 <%
-    List<FestaDTO> rList = (List<FestaDTO>) request.getAttribute("list");
-    FestaDTO rDTO = null;%>
+    List<FestaDTO> rList = (List<FestaDTO>) request.getAttribute("list");%>
 
 <head>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        function serch() {
-            let keyword = $('#search').val()
-            console.log(keyword)
-            let aaa = encodeURI(keyword)
-            console.log(aaa)
-
-            $.ajax({
-                    url: "/festa",
-                    data: {AR : aaa},
-                    method: "POST",
-                    success : function (data){
-
-                    }
-                }
-            )
-        }
 
     </script>
     <style>
@@ -129,64 +114,174 @@
 <div class="main">
 
 
-    <div class="result">
+    <div id="map2" style="width:100%;height:500px;"></div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=344db8e40afa1ae457b074b2bc2932bc&libraries=services"></script>
+    <script type="text/javascript">
+
+        navigator.geolocation.getCurrentPosition(function(position) {
+
+            let latitude = position.coords.latitude; // 위도
+            let longitude = position.coords.longitude; // 경도
+
+            let mapContainer2 = document.getElementById('map2'), // 지도를 표시할 div
+                mapOption2 = {
+                    center: new kakao.maps.LatLng(latitude, longitude), // 지도의 중심좌표
+                    level: 8 // 지도의 확대 레벨
+                };
+            let map2 = new kakao.maps.Map(mapContainer2, mapOption2);
 
 
-        <h2 class="header">검색결과</h2>
-        <div class="header">
-
-        </div>
-        <div class="container">
-            <div id="map" style="width:500px;height:400px;"></div>
-            <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=344db8e40afa1ae457b074b2bc2932bc"></script>
-            <script>
-                var mapContainer = document.getElementById('map'), // 지도를 표시할 div
-                    mapOption = {
-                        center: new kakao.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
-                        level: 3 // 지도의 확대 레벨
+        });
+        function getLocation(){
+            let area = document.getElementById("areaCode").value
+            console.log(area)
+            let ac = "";
+            if (area == 1) {
+                ac = "서울특별시"
+            } else if (area == 2) {
+                ac = "인천광역시"
+            } else if (area == 3) {
+                ac = "대전광역시"
+            } else if (area == 4) {
+                ac = "대구광역시"
+            } else if (area == 5) {
+                ac = "광주광역시"
+            } else if (area == 6) {
+                ac = "부산광역시"
+            } else if (area == 7) {
+                ac = "울산광역시"
+            } else if (area == 8) {
+                ac = "세종특별자치시"
+            } else if (area == 31) {
+                ac = "경기도"
+            } else if (area == 32) {
+                ac = "강원도"
+            } else if (area == 33) {
+                ac = "충청북도"
+            } else if (area == 34) {
+                ac = "충청남도"
+            } else if (area == 35) {
+                ac = "경상북도"
+            } else if (area == 36) {
+                ac = "경상남도"
+            } else if (area == 37) {
+                ac = "전라북도"
+            } else if (area == 38) {
+                ac = "전라남도"
+            } else if (area == 39) {
+                ac = "제주특별자치도"
+            }
+            console.log(ac)
+            console.log(area)
+            let geocoder = new kakao.maps.services.Geocoder();
+            geocoder.addressSearch(ac, function(result, status) {
+                let y = result[0].y
+                let x = result[0].x
+                let mapContainer2 = document.getElementById('map2'), // 지도를 표시할 div
+                    mapOption2 = {
+                        center: new kakao.maps.LatLng(y, x), // 지도의 중심좌표
+                        level: 8 // 지도의 확대 레벨
                     };
+                let map2 = new kakao.maps.Map(mapContainer2, mapOption2);
 
-                var map = new kakao.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
+                markerSet();
 
-                // 마커를 표시할 위치와 title 객체 배열입니다
-                <%--    var positions = [--%>
-                <%--        {--%>
-                <%--            title: <%=rDTO.getTitle()%>,--%>
-                <%--            latlng: new kakao.maps.LatLng(<%=rDTO.getMapx()%>, <%=rDTO.getMapy()%>)--%>
-                <%--        }--%>
-                <%--    ];--%>
+                function markerSet(){
+                    $.ajax({
+                        url: "/tour/Festa",
+                        data: {"area": area},
+                        type: "get",
+                        dataType: "JSON",
+                        success: function (data) {
+                            console.log("성공")
+                            $.each(data, function (index, val){
+                                console.log(val.mapx)
+                                console.log(val.mapy)
 
-                // 마커 이미지의 이미지 주소입니다
-                var imageSrc = "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png";
 
-                for (var i = 0; i < positions.length; i ++) {
+                                let markerPosition  = new kakao.maps.LatLng(val.mapy, val.mapx);
 
-                    // 마커 이미지의 이미지 크기 입니다
-                    var imageSize = new kakao.maps.Size(24, 35);
+// 마커를 생성합니다
+                                let marker = new kakao.maps.Marker({
+                                    position: markerPosition
+                                });
 
-                    // 마커 이미지를 생성합니다
-                    var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
+// 마커가 지도 위에 표시되도록 설정합니다
+                                marker.setMap(map2);
 
-                    // 마커를 생성합니다
-                    var marker = new kakao.maps.Marker({
-                        map: map, // 마커를 표시할 지도
-                        position: positions[i].latlng, // 마커를 표시할 위치
-                        title : positions[i].title, // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됩니다
-                        image : markerImage // 마커 이미지
-                    });
+                                let iwContent = '<div style="padding:5px;">' +
+                                        '<p> 축제 : '+val.title +'</p>'+
+                                        '<p> 주소 : '+ val.addr1 +'</p>' +
+                                        '<p> 기간 : '+val.eventstartdate + '~' + val.eventenddate +'</p>' +
+
+                                        '<p> 전화번호 : '+ val.tel +'</p>'
+                                        '</div>', // 인포윈도우에 표출될 내용으로 HTML 문자열이나 document element가 가능합니다
+                                    iwPosition = new kakao.maps.LatLng(val.mapy, val.mapx); //인포윈도우 표시 위치입니다
+
+// 인포윈도우를 생성합니다
+                                let infowindow = new kakao.maps.InfoWindow({
+                                    position : iwPosition,
+                                    content : iwContent
+                                });
+
+// 마커 위에 인포윈도우를 표시합니다. 두번째 파라미터인 marker를 넣어주지 않으면 지도 위에 표시됩니다
+                                kakao.maps.event.addListener(marker, 'mouseover', function() {
+                                    // 마커에 마우스오버 이벤트가 발생하면 인포윈도우를 마커위에 표시합니다
+                                    infowindow.open(map2, marker);
+                                });
+
+// 마커에 마우스아웃 이벤트를 등록합니다
+                                kakao.maps.event.addListener(marker, 'mouseout', function() {
+                                    // 마커에 마우스아웃 이벤트가 발생하면 인포윈도우를 제거합니다
+                                    infowindow.close();
+                                });
+
+                            });
+                        }
+
+                    })
                 }
-            </script>
-            <%
-                for (int i = 0; i < rList.size(); i++) {
-                    rDTO = rList.get(i);
-
-            %>
-            <img src="<%=rDTO.getFirstimage()%>" style="width:150px;height:150px;"/>
-            <a href="/course/courseDetail?coursename=<%=rDTO.getTitle()%>"><%=rDTO.getTitle()%></a>
-
-            <%}%>
-        </div>
+            });
+        }
+    </script>
+    <div>
+    <select id="areaCode">
+        <option value="1">서울</option>
+        <option value="2">인천</option>
+        <option value="3">대전</option>
+        <option value="4">대구</option>
+        <option value="5">광주</option>
+        <option value="6">부산</option>
+        <option value="7">울산</option>
+        <option value="8">세종</option>
+        <option value="31">경기</option>
+        <option value="32">강원</option>
+        <option value="33">충북</option>
+        <option value="34">충남</option>
+        <option value="35">경북</option>
+        <option value="36">경남</option>
+        <option value="37">전북</option>
+        <option value="38">전남</option>
+        <option value="39">제주</option>
+    </select>
+        <button type="submit" onclick="getLocation()">찾기</button>
     </div>
+    <div class="container">
+
+        <%
+            for (int i = 0; i < rList.size(); i++) {
+                FestaDTO rDTO = rList.get(i);
+
+        %>
+        <img src="<%=rDTO.getFirstimage2()%>" style="width:150px;height:150px;"/>
+        <a href="/tour/FestaDetail?title=<%=rDTO.getTitle()%>"><%=rDTO.getTitle()%></a>
+
+        <%}%>
+    </div>
+
+
+
 </div>
 
 </body>
