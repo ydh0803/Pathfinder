@@ -168,8 +168,8 @@
         <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" onclick="window.open('/admin','관리자 페이지','width=1000 height=1200')">관리자 페이지</a></li>
         <%}%>
     </ul>
-    <input type="button" class="menu" id="menuBtn" onClick="location.href='map'" value="지도
-" >
+    <input type="button" onClick="location.href='/fiesta'" value="지도" >
+    <input type="button" onClick="location.href='/gps'" value="주변 시설" >
 </div>
 <div class="container">
 

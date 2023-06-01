@@ -1,10 +1,9 @@
 package com.example.pathfinder.controller;
 
-import com.example.pathfinder.dto.ApiDTO;
-import com.example.pathfinder.dto.FestaDTO;
-import com.example.pathfinder.dto.SearchDTO;
+import com.example.pathfinder.dto.*;
 import com.example.pathfinder.util.ApiFesta;
 import com.example.pathfinder.util.ApiParse;
+import com.example.pathfinder.util.ApiSearchDetail;
 import com.example.pathfinder.util.CmmUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONArray;
@@ -144,23 +143,116 @@ public class ApiController {
     }
 
     @GetMapping(value = "/tour/SearchDetail")
-    public String SearchDetail(HttpServletRequest request, HttpSession session, Model model) throws Exception {
+    public String SearchDetail(HttpServletRequest request, Model model) throws IOException, ParseException {
+        log.info(this.getClass().getName() + ".SearchDetail start");
         String contentid = CmmUtil.nvl(request.getParameter("contentid"));
+        String api = String.valueOf(ApiSearchDetail.main(contentid));
         log.info(contentid);
-        ApiDTO pDTO = new ApiDTO();
-        pDTO.setContentid(contentid);
-        String contenttypeid = CmmUtil.nvl(request.getParameter("contenttypeid"));
-        pDTO.setContenttypeid(contenttypeid);
-        SearchDTO iDTO = new SearchDTO();
-//        iDTO.setContentid(contentid);
-//                ApiDTO rDTO = courseService.getCourseByName(contentid);
-//        SearchDTO mDTO = imageService.getImg(iDTO);
-//        List<SearchDTO> rList = bikeService.selectReview(iDTO);
-//
-//        model.addAttribute("rDTO", rDTO);
-//        model.addAttribute("iDTO",mDTO);
-//        model.addAttribute("rList", rList);
+
+        JSONParser jsonParser = new JSONParser();
+        JSONObject obj = (JSONObject) jsonParser.parse(api);
+        JSONObject response = (JSONObject) obj.get("response");
+        JSONObject body = (JSONObject) response.get("body");
+        JSONObject items = (JSONObject) body.get("items");
+        JSONArray item = (JSONArray) items.get("item");
+        log.info(String.valueOf(item));
+
+        DetailDTO rDTO = null;
+        JSONObject array = null;
+        for (Object arr : item) {
+            array = (JSONObject) arr;
+            rDTO = new DetailDTO();
+            // rDTO를 사용하는 코드
+        }
+        rDTO.setChkpet((String) array.get("chkpet"));
+        rDTO.setChkcreditcard((String) array.get("chkcreditcard"));
+        rDTO.setAccomcount((String) array.get("accomcount"));
+        rDTO.setChkbabycarriage((String) array.get("chkbabycarriage"));
+        rDTO.setParking((String) array.get("parking"));
+        rDTO.setInfocenter((String) array.get("infocenter"));
+        rDTO.setUsetime((String) array.get("usetime"));
+        rDTO.setExpagerange((String) array.get("expagerange"));
+        rDTO.setOpendate((String) array.get("opendate"));
+        rDTO.setRestdate((String) array.get("restdate"));
+        rDTO.setHeritage1((String) array.get("heritage1"));
+        rDTO.setHeritage2((String) array.get("heritage2"));
+        rDTO.setHeritage3((String) array.get("heritage3"));
+
+//        list.add(rDTO);
+
+
+        log.info("dddd");
         return "/tour/SearchDetail";
     }
-}
+
+//        String conentid = CmmUtil.nvl(request.getParameter("contentid"));
+//        log.info(conentid);
+//        DetailDTO pDTO = new DetailDTO();
+//        pDTO.setContentid(conentid);
+//        String conenttypeid = CmmUtil.nvl(request.getParameter("contentTypeId"));
+//        log.info(conenttypeid);
+//        pDTO.setContenttypeid(conenttypeid);
+//
+//        DetailDTO rDTO = DetailService.getDetail(contentid);
+//
+//        model.addAttribute("rDTO", rDTO);
+//        model.addAttribute("rList", rList);
+//        return "/tour/SearchDetail";
+//    }
+
+    @GetMapping("/gps")
+    public String gps(){
+        return "/tour/gps";
+    }
+
+    @GetMapping("/tour/gpsScan")
+    public String gpsScan(HttpServletRequest request, Model model) throws IOException, ParseException {
+
+            log.info(this.getClass().getName() + ".gpsScanning start");
+
+            String mapX = CmmUtil.nvl(request.getParameter("lon"));
+            String mapY = CmmUtil.nvl(request.getParameter("lat"));
+
+            log.info(mapX);
+            log.info(mapY);
+
+            String api = String.valueOf(ApiParse.main(mapX));
+            String api2 = String.valueOf(ApiParse.main(mapY));
+
+            JSONParser jsonParser = new JSONParser();
+            JSONObject obj = (JSONObject) jsonParser.parse(api);
+            JSONObject response = (JSONObject) obj.get("response");
+            JSONObject body = (JSONObject) response.get("body");
+            JSONObject items = (JSONObject) body.get("items");
+            JSONArray item = (JSONArray) items.get("item");
+            log.info(String.valueOf(item));
+
+            List<ScanDTO> list = new ArrayList<>();
+            for(Object arr : item){
+                JSONObject array = (JSONObject) arr;
+                ScanDTO rDTO = new ScanDTO();
+                rDTO.setAreacode((String) array.get("areacode"));
+                rDTO.setContentid((String) array.get("contentid"));
+                rDTO.setTitle((String) array.get("title"));
+                rDTO.setContenttypeid((String) array.get("contenttypeid"));
+                rDTO.setFirstimage2((String) array.get("firstimage2"));
+                rDTO.setFirstimage((String) array.get("firstimage"));
+                rDTO.setSigungucode((String) array.get("sigungucode"));
+                rDTO.setTel((String) array.get("tel"));
+                rDTO.setAddr1((String) array.get("addr1"));
+                rDTO.setAddr2((String) array.get("addr2"));
+                rDTO.setDist((String) array.get("dist"));
+
+                list.add(rDTO);
+
+            }
+
+            log.info(list.toString());
+            model.addAttribute("list", list);
+
+
+            return "/tour/Search";
+        }
+    }
+
 

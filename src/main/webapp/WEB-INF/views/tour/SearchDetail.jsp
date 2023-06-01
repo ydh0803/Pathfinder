@@ -1,9 +1,10 @@
 <%@ page import="com.example.pathfinder.dto.ApiDTO" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Objects" %>
+<%@ page import="com.example.pathfinder.dto.DetailDTO" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
-    List<ApiDTO> rList = (List<ApiDTO>) request.getAttribute("list");
+    DetailDTO rDTO = (DetailDTO) request.getAttribute("rDTO");
 %>
 <head>
     <style>
@@ -106,15 +107,11 @@
     <h2 class="header">상세</h2>
     <div class="container">
 
-        <%
-            for (int i = 0; i < rList.size(); i++) {
-                ApiDTO rDTO = rList.get(i);
+<%--        <%DetailDTO rDTO = rList.get(0);%>--%>
 
-        %>
-        <img src="<%=rDTO.getFirstimage2()%>" style="width:150px;height:150px;"/>
-        <a href="/course/courseDetail?coursename=<%=rDTO.getTitle()%>"><%=rDTO.getTitle()%></a>
+        <a><%=rDTO.getUsetime()%></a>
 
-        <%}%>
+
     </div>
 </div>
 </body>

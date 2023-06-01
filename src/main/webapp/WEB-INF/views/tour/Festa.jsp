@@ -113,7 +113,8 @@
 <body>
 <div class="main">
 
-
+<h2 class="header">축제 지도</h2>
+    <div class="container">
     <div id="map2" style="width:100%;height:500px;"></div>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=344db8e40afa1ae457b074b2bc2932bc&libraries=services"></script>
@@ -181,7 +182,7 @@
                 let mapContainer2 = document.getElementById('map2'), // 지도를 표시할 div
                     mapOption2 = {
                         center: new kakao.maps.LatLng(y, x), // 지도의 중심좌표
-                        level: 8 // 지도의 확대 레벨
+                        level: 10 // 지도의 확대 레벨
                     };
                 let map2 = new kakao.maps.Map(mapContainer2, mapOption2);
 
@@ -244,8 +245,10 @@
                 }
             });
         }
+
     </script>
-    <div>
+
+    <div class="main">
     <select id="areaCode">
         <option value="1">서울</option>
         <option value="2">인천</option>
@@ -265,23 +268,10 @@
         <option value="38">전남</option>
         <option value="39">제주</option>
     </select>
-        <button type="submit" onclick="getLocation()">찾기</button>
+        <button type="submit" id="find" onclick="getLocation()">찾기</button>
     </div>
-    <div class="container">
-
-        <%
-            for (int i = 0; i < rList.size(); i++) {
-                FestaDTO rDTO = rList.get(i);
-
-        %>
-        <img src="<%=rDTO.getFirstimage2()%>" style="width:150px;height:150px;"/>
-        <a href="/tour/FestaDetail?title=<%=rDTO.getTitle()%>"><%=rDTO.getTitle()%></a>
-
-        <%}%>
     </div>
-
-
-
+</div>
 </div>
 
 </body>
