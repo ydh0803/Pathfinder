@@ -74,11 +74,11 @@ public class UserController {
 
         try {
 
-            String userId = CmmUtil.nvl(request.getParameter("user_id"));
-            String userPwd = CmmUtil.nvl(request.getParameter("user_pw"));
-            String userName = CmmUtil.nvl(request.getParameter("user_name"));
-            String userMailid = CmmUtil.nvl(request.getParameter("user_mailid"));
-            String userMaildomain = CmmUtil.nvl(request.getParameter("user_maildomain"));
+            String userId = CmmUtil.nvl(request.getParameter("userId"));
+            String userPwd = CmmUtil.nvl(request.getParameter("userPw"));
+            String userName = CmmUtil.nvl(request.getParameter("userName"));
+            String userMailid = CmmUtil.nvl(request.getParameter("userMailid"));
+            String userMaildomain = CmmUtil.nvl(request.getParameter("userMaildomain"));
             String certificationYN = CmmUtil.nvl(request.getParameter("certificationYN"));
 
             String userPw = UseSha256.encrypt(userPwd);
@@ -91,11 +91,12 @@ public class UserController {
 
             UserDTO pDTO = new UserDTO();
 
-            pDTO.setUser_id(userId);
-            pDTO.setUser_pw(userPw);
-            pDTO.setUser_name(userName);
-            pDTO.setUser_mailid(userMailid);
-            pDTO.setUser_maildomain(userMaildomain);
+            pDTO.setUserId(userId);
+            pDTO.setUserPw(userPw);
+            pDTO.setUserName(userName);
+            pDTO.setUserMailid(userMailid);
+            pDTO.setUserMaildomain(userMaildomain);
+            pDTO.setAuth("user");
 
             userService.InsertUserInfo(pDTO);
 
@@ -127,13 +128,13 @@ public class UserController {
         String msg = "";
 
 
-        String userId = CmmUtil.nvl(request.getParameter("user_id"));
+        String userId = CmmUtil.nvl(request.getParameter("userId"));
 
         log.info("userId : " + userId);
 
         UserDTO pDTO = new UserDTO();
 
-        pDTO.setUser_id(userId);
+        pDTO.setUserId(userId);
 
         int result = userService.idCheck(pDTO);
 
@@ -159,6 +160,11 @@ public class UserController {
         int res = userService.mailCheck(pDTO);
         log.info(this.getClass().getName() + ".mailCheck end!");
         return res;
+    }
+
+    @GetMapping("/adminPage")
+    public String adminPage(){
+        return "/signUp/ddd";
     }
 
 }

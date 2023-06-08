@@ -1,4 +1,7 @@
+<%@ page import="com.example.pathfinder.dto.UserDTO" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+
+<% UserDTO uDTO = (UserDTO) session.getAttribute("user"); %>
 
 <head>
     <style>
@@ -92,7 +95,14 @@
             border-color: #05a;
         }
     </style>
-
+<script>
+    function deleteUser() {
+        console.log("탈퇴")
+        if (confirm('정말 탈퇴하시겠습니까?')===true){
+            location.href="/deleteUser?userNo=<%=uDTO.getUserNo()%>"
+        }
+    }
+</script>
 </head>
 <body>
 <div class="login">
@@ -101,10 +111,14 @@
     <h2 class="login-header">마이페이지</h2>
 
     <form class="login-container">
-        <p><input type="text" id="id" placeholder="아이디"></p>
-        <p><input type="password" id="ps" placeholder="비밀번호"></p>
-        <p><input type="button" value="로그인"><input type="button" onClick="location.href='signUp'" value="회원가입" ></p>
-        <p><input type="button" value="아이디 찾기"><input type="button" value="비밀번호 찾기"></p>
+        <p> 닉네임 : <%=uDTO.getUserName()%></p>
+        <p> 이메일 : <%=uDTO.getUserMailid()%>@<%=uDTO.getUserMaildomain()%></p>
+
+        <button class="menu" onclick="location.href='/userEdit'">수정</button>
+        <button class="menu" id="menuBtn" onclick="location.href='/logOut'">로그아웃</button>
+        <button onclick="deleteUser()">탈퇴</button>
+
+
     </form>
 </div>
 </body>

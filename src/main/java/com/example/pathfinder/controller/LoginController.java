@@ -5,6 +5,8 @@ import com.example.pathfinder.service.impl.LoginService;
 import com.example.pathfinder.util.CmmUtil;
 import com.example.pathfinder.util.UseSha256;
 import lombok.extern.slf4j.Slf4j;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -34,8 +36,10 @@ public class LoginController {
         String userId = CmmUtil.nvl(request.getParameter("userid"));
         log.info(userId);
 
+
         String userpwd = UseSha256.encrypt(map.get("userpwd"));
         log.info(userpwd);
+        map.put("userid", userId);
         map.put("userpwd", userpwd);
         try {
             if (map.get("userid") == null || map.get("userpwd") == null) {
@@ -44,11 +48,13 @@ public class LoginController {
                 return "/signUp/MsgToMain";
             }
             UserDTO rDTO = loginService.login(map);
+            log.info("gggg :"+ rDTO);
             if (rDTO != null) {
+                log.info(rDTO.getAuth());
                 session.setAttribute("user", rDTO);
                 log.info("로그인 세션생성 완료");
                 log.info(this.getClass().getName() + ".login end");
-                model.addAttribute("msg", rDTO.getUser_name()+"님 환영합니다.");
+                model.addAttribute("msg", rDTO.getUserName()+"님 환영합니다.");
                 return "/signUp/MsgToMain";
 
             } else {
@@ -81,7 +87,7 @@ public class LoginController {
         return "/signUp/find";
     }
 
-   /* @ResponseBody
+   @ResponseBody
     @PostMapping(value = "/findId")
     public List<Map<String, Object>> findId(@RequestBody List<Map<String, Object>> params) throws Exception {
         log.info(this.getClass().getName()+".findID 시작");
@@ -89,23 +95,23 @@ public class LoginController {
         JSONArray jsonArr = new JSONArray();
         HashMap<String, Object> hash = new HashMap<>();
         for (Map<String, Object> list : params) {
-            String user_mailid = (String) list.get("user_mailid");
-            log.info(user_mailid);
-            String user_maildomain = (String) list.get("user_maildomain");
-            log.info(user_maildomain);
+            String userMailid = (String) list.get("userMailid");
+            log.info(userMailid);
+            String userMaildomain = (String) list.get("userMaildomain");
+            log.info(userMaildomain);
             UserDTO pDTO = new UserDTO();
-            pDTO.setUser_mailid(user_mailid);
-            pDTO.setUser_maildomain(user_maildomain);
+            pDTO.setUserMailid(userMailid);
+            pDTO.setUserMaildomain(userMaildomain);
             UserDTO rDTO = loginService.findByemail(pDTO);
-            String user_id = rDTO.getUser_id();
-            log.info(user_id);
-            hash.put("user_id",user_id);
+            String userId = rDTO.getUserId();
+            log.info(userId);
+            hash.put("userId",userId);
             jsonObj = new JSONObject(hash);
             jsonArr.add(jsonObj);
         }
         log.info("jsonArrCheck: {}", jsonArr);
         return jsonArr;
-    }*/
+    }
 
     @GetMapping(value = "/findPw")
     public String findPwView() throws Exception{
@@ -119,12 +125,13 @@ public class LoginController {
         return "/signUp/pwCheck";
     }
 
-   /* @GetMapping(value = "/deleteUser")
+   @GetMapping(value = "/deleteUser")
     public String deleteUser(HttpSession session, HttpServletRequest request, Model model) throws Exception {
         log.info(this.getClass().getName()+".deleteUser start!");
-        int user_no = Integer.valueOf(CmmUtil.nvl(request.getParameter("user_no")));
+        int userNo = Integer.parseInt(CmmUtil.nvl(request.getParameter("userNo")));
+        log.info(String.valueOf(userNo));
         UserDTO pDTO = new UserDTO();
-        pDTO.setUser_no(user_no);
+        pDTO.setUserNo(userNo);
 
         loginService.deleteUser(pDTO);
         session.invalidate();
@@ -133,5 +140,5 @@ public class LoginController {
         log.info(this.getClass().getName()+".deleteUser end!");
 
         return "/signUp/MsgToMain";
-    }*/
+    }
 }

@@ -12,7 +12,7 @@
     <title>처리페이지</title>
     <script type="text/javascript">
         alert("<%=msg%>");
-        top.location.href="/index";
+        top.location.href="/";
 
     </script>
 </head>

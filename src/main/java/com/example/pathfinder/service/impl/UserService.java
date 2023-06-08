@@ -5,6 +5,7 @@ import com.example.pathfinder.dto.NoticeDTO;
 import com.example.pathfinder.dto.UserDTO;
 import com.example.pathfinder.service.IUserService;
 import com.example.pathfinder.util.CmmUtil;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -47,8 +48,8 @@ public class UserService implements IUserService {
         log.info(this.getClass().getName() + ".idCheck start");
 
         int res = 0;
-        String user_id = CmmUtil.nvl(pDTO.getUser_id());
-        log.info(user_id);
+        String userId = CmmUtil.nvl(pDTO.getUserId());
+        log.info(userId);
 
         UserDTO rDTO = userMapper.idCheck(pDTO);
 
@@ -58,7 +59,7 @@ public class UserService implements IUserService {
             rDTO = new UserDTO();
         }
 
-        if (CmmUtil.nvl(rDTO.getUses_exists()).equals("Y")){
+        if (CmmUtil.nvl(rDTO.getUsesExists()).equals("Y")){
             res = 1;
         }else{
             res = 0;
@@ -73,7 +74,7 @@ public class UserService implements IUserService {
         log.info(this.getClass().getName() + ".nameCheck start");
 
         int res = 0;
-        String user_name = CmmUtil.nvl(pDTO.getUser_name());
+        String user_name = CmmUtil.nvl(pDTO.getUserName());
         log.info(user_name);
 
         UserDTO rDTO = userMapper.nameCheck(pDTO);
@@ -82,7 +83,7 @@ public class UserService implements IUserService {
             rDTO = new UserDTO();
         }
 
-        if (CmmUtil.nvl(rDTO.getUses_exists()).equals("Y")){
+        if (CmmUtil.nvl(rDTO.getUsesExists()).equals("Y")){
             res = 1;
         }else{
             res = 0;
@@ -97,8 +98,8 @@ public class UserService implements IUserService {
     @Override
     public int mailCheck(UserDTO pDTO) {
         int res = 0;
-        String user_mailid = CmmUtil.nvl(pDTO.getUser_mailid());
-        String user_maildomain = CmmUtil.nvl(pDTO.getUser_maildomain());
+        String user_mailid = CmmUtil.nvl(pDTO.getUserMailid());
+        String user_maildomain = CmmUtil.nvl(pDTO.getUserMaildomain());
         log.info(user_mailid+"@"+user_maildomain);
 
         UserDTO rDTO = userMapper.mailCheck(pDTO);
@@ -107,7 +108,7 @@ public class UserService implements IUserService {
             rDTO = new UserDTO();
         }
 
-        if (CmmUtil.nvl(rDTO.getUses_exists()).equals("Y")) {
+        if (CmmUtil.nvl(rDTO.getUsesExists()).equals("Y")) {
             res = 1;
         } else {
             res = 0;

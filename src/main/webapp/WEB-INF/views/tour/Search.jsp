@@ -110,12 +110,12 @@
             for (int i = 0; i < rList.size(); i++) {
                 ApiDTO rDTO = rList.get(i);
 
+
         %>
         <img src="<%=rDTO.getFirstimage2()%>" style="width:150px;height:150px;"/>
-        <a href="/tour/SearchDetail?title=<%=rDTO.getTitle()%>"><%=rDTO.getTitle()%></a>
-            <a href="/tour/SearchDetail?contentid=<%=rDTO.getContentid()%>"><%=rDTO.getTitle()%></a>
+            <a href="/tour/SearchDetail?contentid=<%=rDTO.getContentid()%>&title=<%=rDTO.getTitle()%>&tel=<%=rDTO.getTel()%>&firstimage=<%=rDTO.getFirstimage()%>&addr1=<%=rDTO.getAddr1()%>&addr2=<%=rDTO.getAddr2()%>"><%=rDTO.getTitle()%></a>
 <%--        <a href="/tour/SearchDetail?contentId=<%rDTO.getContentId();%>&contentTypeId=<%rDTO.getContentTypeId();%>"><%=rDTO.getTitle()%></a>--%>
-
+        <br/>
         <%}%>
         </div>
 </div>

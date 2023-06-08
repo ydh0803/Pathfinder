@@ -19,6 +19,13 @@ public class DetailDTO {
     private String heritage1;
     private String chkbabycarriage;
     private String chkcreditcard;
+    private String title;
+    private String tel;
+    private String firstimage;
+    private String expguide;
+    private String addr1;
+    private String addr2;
+
 
 
     public void getContentTypeId() {

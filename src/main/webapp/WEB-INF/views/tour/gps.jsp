@@ -1,7 +1,11 @@
+<%@ page import="com.example.pathfinder.dto.ScanDTO" %>
+<%@ page import="java.util.List" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
-
+<%
+    List<ScanDTO> sList = (List<ScanDTO>) request.getAttribute("list");
+%>
 <head>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
@@ -112,103 +116,193 @@
 
         <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=344db8e40afa1ae457b074b2bc2932bc&libraries=services"></script>
         <script>
-            var mapContainer = document.getElementById('map'), // 지도를 표시할 div
-                mapOption = {
-                    center: new kakao.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
-                    level: 10 // 지도의 확대 레벨
-                };
+            function SetGPS() {
+                var mapContainer = document.getElementById('map'), // 지도를 표시할 div
+                    mapOption = {
+                        center: new kakao.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
+                        level: 10 // 지도의 확대 레벨
+                    };
 
-            var map = new kakao.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
+                var map = new kakao.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
 
-            // HTML5의 geolocation으로 사용할 수 있는지 확인합니다
-            if (navigator.geolocation) {
+                // HTML5의 geolocation으로 사용할 수 있는지 확인합니다
+                if (navigator.geolocation) {
 
-                // GeoLocation을 이용해서 접속 위치를 얻어옵니다
-                navigator.geolocation.getCurrentPosition(function(position) {
+                    // GeoLocation을 이용해서 접속 위치를 얻어옵니다
+                    navigator.geolocation.getCurrentPosition(function (position) {
 
-                    var lat = position.coords.latitude, // 위도
-                        lon = position.coords.longitude; // 경도
+                        let lat = position.coords.latitude, // 위도
+                            lon = position.coords.longitude; // 경도
 
-                    console.log(lat, lon)
+                        console.log(lat, lon)
 
-                    var locPosition = new kakao.maps.LatLng(lat, lon), // 마커가 표시될 위치를 geolocation으로 얻어온 좌표로 생성합니다
-                        message = '<div style="padding:5px;">현재 위치</div>'; // 인포윈도우에 표시될 내용입니다
+                        var locPosition = new kakao.maps.LatLng(lat, lon), // 마커가 표시될 위치를 geolocation으로 얻어온 좌표로 생성합니다
+                            message = '<div style="padding:5px;">현재 위치</div>'; // 인포윈도우에 표시될 내용입니다
 
-                    // 마커와 인포윈도우를 표시합니다
+                        // 마커와 인포윈도우를 표시합니다
+                        displayMarker(locPosition, message);
+
+
+                            let ContentTypeId = document.getElementById("ContentTypeID").value;
+                            console.log(ContentTypeId)
+                            console.log(lon)
+                            console.log(lat)
+                            $.ajax({
+                                    url: "/tour/gpsScan",
+                                    data: {"mapX": lon,
+                                        "mapY": lat,
+                                        "ContentTypeId": ContentTypeId},
+                                    type: "get",
+                                    dataType: "JSON",
+                                    success: function (data) {
+                                        $.each(data, function (index, val){
+                                            console.log("성공")
+// 마커를 생성합니다
+                                            let markerPosition  = new kakao.maps.LatLng(val.mapy, val.mapx);
+                                            let marker = new kakao.maps.Marker({
+                                                position: markerPosition
+                                            });
+
+// 마커가 지도 위에 표시되도록 설정합니다
+                                            marker.setMap(map);
+
+                                            let iwContent = '<div style="padding:5px;">' +
+                                                '<p> 이름 : '+val.title +'</p>'+
+                                                '<p> 주소 : '+ val.addr1 +'</p>' +
+                                                '<p> 전화번호 : '+ val.tel +'</p>'
+                                            '</div>', // 인포윈도우에 표출될 내용으로 HTML 문자열이나 document element가 가능합니다
+                                                iwPosition = new kakao.maps.LatLng(val.mapy, val.mapx); //인포윈도우 표시 위치입니다
+
+// 인포윈도우를 생성합니다
+                                            let infowindow = new kakao.maps.InfoWindow({
+                                                position : iwPosition,
+                                                content : iwContent
+                                            });
+
+// 마커 위에 인포윈도우를 표시합니다. 두번째 파라미터인 marker를 넣어주지 않으면 지도 위에 표시됩니다
+                                            kakao.maps.event.addListener(marker, 'mouseover', function() {
+                                                // 마커에 마우스오버 이벤트가 발생하면 인포윈도우를 마커위에 표시합니다
+                                                infowindow.open(map, marker);
+                                            });
+
+// 마커에 마우스아웃 이벤트를 등록합니다
+                                            kakao.maps.event.addListener(marker, 'mouseout', function() {
+                                                // 마커에 마우스아웃 이벤트가 발생하면 인포윈도우를 제거합니다
+                                                infowindow.close();
+                                            });
+
+
+                                    })},
+                                    error: function (error) {
+                                        console.log("실패");
+                                    }
+                                }
+                            );
+
+
+
+                    });
+
+                } else { // HTML5의 GeoLocation을 사용할 수 없을때 마커 표시 위치와 인포윈도우 내용을 설정합니다
+
+                    var locPosition = new kakao.maps.LatLng(33.450701, 126.570667),
+                        message = 'geolocation을 사용할수 없어요..'
+
                     displayMarker(locPosition, message);
+                }
 
-                });
+                // 지도에 마커와 인포윈도우를 표시하는 함수입니다
+                function displayMarker(locPosition, message) {
 
-            } else { // HTML5의 GeoLocation을 사용할 수 없을때 마커 표시 위치와 인포윈도우 내용을 설정합니다
+                    // 마커를 생성합니다
+                    var marker = new kakao.maps.Marker({
+                        map: map,
+                        position: locPosition
+                    });
 
-                var locPosition = new kakao.maps.LatLng(33.450701, 126.570667),
-                    message = 'geolocation을 사용할수 없어요..'
+                    var iwContent = message, // 인포윈도우에 표시할 내용
+                        iwRemoveable = true;
 
-                displayMarker(locPosition, message);
-            }
+                    // 인포윈도우를 생성합니다
+                    var infowindow = new kakao.maps.InfoWindow({
+                        content: iwContent,
+                        removable: iwRemoveable
+                    });
 
-            // 지도에 마커와 인포윈도우를 표시하는 함수입니다
-            function displayMarker(locPosition, message) {
+                    // 인포윈도우를 마커위에 표시합니다
+                    infowindow.open(map, marker);
 
-                // 마커를 생성합니다
-                var marker = new kakao.maps.Marker({
-                    map: map,
-                    position: locPosition
-                });
+                    // 지도 중심좌표를 접속위치로 변경합니다
+                    map.setCenter(locPosition);
 
-                var iwContent = message, // 인포윈도우에 표시할 내용
-                    iwRemoveable = true;
 
-                // 인포윈도우를 생성합니다
-                var infowindow = new kakao.maps.InfoWindow({
-                    content : iwContent,
-                    removable : iwRemoveable
-                });
-
-                // 인포윈도우를 마커위에 표시합니다
-                infowindow.open(map, marker);
-
-                // 지도 중심좌표를 접속위치로 변경합니다
-                map.setCenter(locPosition);
+                }
 
 
             }
 
-            function markerSet(lat, lon){
+
+        </script>
+
+
+    <p>현재 위치를 중심으로 반경 10km를 검색합니다.</p>
+    <select id="ContentTypeID">
+        <option value="14">문화시설</option>
+        <option value="28">레포츠</option>
+        <option value="32">숙박</option>
+        <option value="38">쇼핑</option>
+        <option value="39">음식점</option>
+    </select>
+    <button id="ScanStart" onclick="SetGPS()">검색</button>
+
+
+        <div id="gpsList" name="gpsList">
+
+        </div>
+<%--    <%--%>
+<%--        for (int i = 0; i < sList.size(); i++) {--%>
+<%--            ScanDTO sDTO = sList.get(i);--%>
+
+
+<%--    %>--%>
+<%--    <img src="<%=rDTO.getFirstimage2()%>" style="width:150px;height:150px;"/>--%>
+<%--    <a href="/tour/SearchDetail?title=<%=rDTO.getTitle()%>"><%=rDTO.getTitle()%></a>--%>
+<%--    <a href="/tour/SearchDetail?contentid=<%=rDTO.getContentid()%>"><%=rDTO.getTitle()%></a>--%>
+<%--    &lt;%&ndash;        <a href="/tour/SearchDetail?contentId=<%rDTO.getContentId();%>&contentTypeId=<%rDTO.getContentTypeId();%>"><%=rDTO.getTitle()%></a>&ndash;%&gt;--%>
+
+<%--    <%}%>--%>
+
+        <script>
+
+            function executeCode() {
+                navigator.geolocation.getCurrentPosition(function (position) {
+                let lat = position.coords.latitude, // 위도
+                    lon = position.coords.longitude; // 경도
                 let ContentTypeId = document.getElementById("ContentTypeID").value;
-                console.log(ContentTypeId)
-                console.log(lon)
-                console.log(lat)
+
                 $.ajax({
                     url: "/tour/gpsScan",
                     data: {"mapX": lon,
-                           "mapY": lat,
-                           "ContentTypeId": ContentTypeId},
+                        "mapY": lat,
+                        "ContentTypeId": ContentTypeId},
                     type: "get",
                     dataType: "JSON",
                     success: function (data) {
-                        console.log("성공");
-                    },
-                    error: function (error) {
-                    console.log("실패");
-                    }
-                    }
-                );
-                }
+                        $.each(data, function (index, val){
+                            $('#gpsList').append('<img src="' +val.firstimage+'" style="width:150px;height:150px;"> <a href="/tour/SearchDetail?contentid='+val.contentid+'"> '+val.title+' <a/>')
+
+
+            })}})})}
+
+
+
         </script>
 
-    </div>
-</div>
-<p>현재 위치를 중심으로 반경 10km를 검색합니다.</p>
-<select id="ContentTypeID">
-    <option value="14">문화시설</option>
-    <option value="28">레포츠</option>
-    <option value="32">숙박</option>
-    <option value="38">쇼핑</option>
-    <option value="39">음식점</option>
-</select>
-<button id="ScanStart" onclick="markerSet()">검색</button>
 
+        <input type="button" class="menu" id="menuBtn" onclick='executeCode()' value="버튼">
+
+</div>
+    </div>
 </div>
 
 </body>

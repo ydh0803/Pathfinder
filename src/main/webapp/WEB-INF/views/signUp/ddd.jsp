@@ -1,12 +1,33 @@
-<%@ page import="com.example.pathfinder.dto.ApiDTO" %>
+<%@ page import="com.example.pathfinder.dto.UserDTO" %>
 <%@ page import="java.util.List" %>
-<%@ page import="java.util.Objects" %>
-<%@ page import="com.example.pathfinder.dto.DetailDTO" %>
-<%@ page import="org.springframework.ui.Model" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
-    DetailDTO dDTO = (DetailDTO) request.getAttribute("Detail");
-%>
+    UserDTO rDTO = (UserDTO) session.getAttribute("user");
+        List<UserDTO> uList = (List<UserDTO>) request.getAttribute("uList");
+
+        int access = 0;
+        if (session.getAttribute("user")==null) {
+            access = 0;
+        } else {
+            UserDTO uDTO = (UserDTO) session.getAttribute("user");
+            System.out.println(uDTO.getAuth());
+            if (uDTO.getAuth().equals("admin")) {
+                access = 3;
+            } else {
+                access = 1;
+            }
+        }
+        %>
+<script>
+
+    function doOnload(){
+        if ("<%=access%>"==="1"){
+            alert("관리자만 접근할수 있는 페이지 입니다");
+            window.close()
+        }
+    }
+</script>
+
 <head>
     <style>
         @import url(https://fonts.googleapis.com/css?family=Open+Sans:400,700);
@@ -16,17 +37,14 @@
             font-family: 'Open Sans', sans-serif;
         }
 
-        .result {
+        .login {
             width: 400px;
             margin: 16px auto;
             font-size: 16px;
         }
-        .img {
-            width: 380px;
-        }
 
         /* Reset top and bottom margins from certain elements */
-        .header,
+        .login-header,
         .login p {
             margin-top: 0;
             margin-bottom: 0;
@@ -41,7 +59,7 @@
             border-bottom-color: #28d;
         }
 
-        .header {
+        .login-header {
             background: #28d;
             padding: 20px;
             font-size: 1.4em;
@@ -51,7 +69,7 @@
             color: #fff;
         }
 
-        .container {
+        .login-container {
             background: #ebebeb;
             padding: 12px;
         }
@@ -104,32 +122,17 @@
     </style>
 
 </head>
-<body>
-<div class="result">
+<body onload="doOnload()">
+<div class="login">
 
 
-    <h2 class="header"><%=dDTO.getTitle()%></h2>
-    <div class="container">
+    <h2 class="login-header">로그인</h2>
 
-        <img class="img" src="<%=dDTO.getFirstimage()%>">
-        <a>주소 : <%=dDTO.getAddr1()%></a><br/>
-        <a>문의 : <%=dDTO.getTel()%>/<%=dDTO.getInfocenter()%></a><br/>
-        <a>체험연령 : <%=dDTO.getExpagerange()%></a><br/>
-        <a>체험안내 : <%=dDTO.getExpguide()%></a><br/>
-        <a>주차시설 : <%=dDTO.getParking()%></a><br/>
-        <a>개장일 : <%=dDTO.getOpendate()%></a><br/>
-        <a>휴장일 : <%=dDTO.getRestdate()%></a><br/>
-        <a>이용시간 : <%=dDTO.getUsetime()%></a><br/>
-        <a>수용인원 : <%=dDTO.getAccomcount()%></a><br/>
-        <a>애완동물 동반여부 : <%=dDTO.getChkpet()%></a><br/>
-        <a>신용카드 사용여부 : <%=dDTO.getChkcreditcard()%></a><br/>
-        <a>유모차 대여여부 : <%=dDTO.getChkbabycarriage()%></a><br/>
-
-
-
-
-
-
-    </div>
+    <form class="login-container" method="POST" action="/login">
+        <p><input type="text" id="userid" name="userid" placeholder="아이디"></p>
+        <p><input type="password" id="userpwd" name="userpwd" placeholder="비밀번호"></p>
+        <p><input type="submit" value="로그인"><input type="button" onClick="location.href='signUp'" value="회원가입" ></p>
+        <p><input type="button" value="아이디 찾기"><input type="button" value="비밀번호 찾기"></p>
+    </form>
 </div>
 </body>

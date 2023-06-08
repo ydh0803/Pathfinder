@@ -17,6 +17,8 @@ public class ScanDTO {
     private String sigungucode;
     private String tel;
     private String dist;
+    private String mapx;
+    private String mapy;
 
 
     public void getContentTypeId() {

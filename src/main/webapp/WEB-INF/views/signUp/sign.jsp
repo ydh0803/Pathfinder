@@ -73,7 +73,7 @@
             url : "/idCheck",
             type : "POST",
             dataType :"JSON",
-            data : {"user_id" : $("#user_id").val()},
+            data : {"userId" : $("#userId").val()},
             success : function (result) {
                 console.log(result)
                 if(result >= 1) {
@@ -287,26 +287,26 @@
                 <div class="container">
                     <legend>내 정보</legend>
 
-                    <label for="user_id">아이디</label>
-                    <input type="text" id="user_id" name="user_id" placeholder="아이디">
+                    <label for="userId">아이디</label>
+                    <input type="text" id="userId" name="user_id" placeholder="아이디">
                     <input type="hidden" class="form-control" name="idChkYN" id="idChkYN">
                     <button class="btn btn-primary" class="idChk" type="button" id="idChk" onclick="idCheck()" value="N">중복체크</button>
 
 
                     <label for="pw">비밀번호</label>
-                    <input type="password" name="user_pw" id="pw" onchange="check_pw()" placeholder="비밀번호">
+                    <input type="password" name="userPw" id="pw" onchange="check_pw()" placeholder="비밀번호">
 
                     <label for="pw2">비밀번호 확인</label>
-                    <input type="password" name="user_pw_check" id="pw2" onchange="check_pw()" placeholder="비밀번호 확인">
+                    <input type="password" name="userPwCheck" id="pw2" onchange="check_pw()" placeholder="비밀번호 확인">
                     <span id="check"></span>
                     <input type="hidden" class="form-control" name="pwChkYN" id="pwChkYN">
 
-                    <label for="user_id">닉네임</label>
-                    <input type="text" id="user_name" name="user_name" placeholder="닉네임">
+                    <label for="userName">닉네임</label>
+                    <input type="text" id="userName" name="user_name" placeholder="닉네임">
 
-                    <label for="user_mailid">이메일</label>
+                    <label for="userMailid">이메일</label>
                     <div class="input-group mb-3">
-                        <input type="text" class="form-control" id="user_mailid" name="user_mailid" placeholder="Email">
+                        <input type="text" class="form-control" id="userMailid" name="user_mailid" placeholder="Email">
                         <span class="input-group-text">@</span>
                         <select style="height: 54px; background: #e8eeef;" class="form-control" name="mail3" onchange="mailCheck()">
                             <optgroup label="Web">
@@ -316,7 +316,7 @@
                         </select>
                     </div>
                     <input type="hidden" class="form-control" name="mailChkYN" id="mailChkYN">
-                    <input type="hidden" style="width:150px;height:35px;" id="user_maildomain" name="user_maildomain"/>
+                    <input type="hidden" style="width:150px;height:35px;" id="userMaildomain" name="userMaildomain"/>
                     <button type="button" class="btn btn-primary" onclick="emailCheck()">중복체크</button>
 
                     <button type="submit">가입</button>

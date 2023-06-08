@@ -8,7 +8,7 @@
         edit = 3;
     } else {
         UserDTO uDTO = (UserDTO) session.getAttribute("user");
-        int ss_userNo = uDTO.getUserNo();
+        int ss_user_no = uDTO.getUserNo();
 //로그인 안했다면....
     }
     int rep = 0;
@@ -19,26 +19,24 @@
 %>
 <head>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-    function search() {
-        let keyword = $('#search').val()
-        console.log(keyword)
-        let aaa = encodeURI(keyword)
-        console.log(aaa)
+    <script>
+        function search() {
+            let keyword = $('#search').val()
+            console.log(keyword)
+            let aaa = encodeURI(keyword)
+            console.log(aaa)
 
-        location.href="/keywordSearch?AR=" + aaa
-    }
-
-    function chksearch() {
-        if(f.search.value == ""){
-            alert("검색어를 입력해주세요.");
-            f.search.focus();
-            return false;
+            location.href="/keywordSearch?AR=" + aaa
         }
-    }
 
-
-</script>
+        function chksearch() {
+            if(f.search.value == ""){
+                alert("검색어를 입력해주세요.");
+                f.search.focus();
+                return false;
+            }
+        }
+    </script>
     <style>
         .search {
             position: relative;
@@ -63,8 +61,7 @@
 
         .menu {
             position: absolute;
-            width: 45px;
-            height: 35px;
+            width: 60px;
         }
 
         @import url(https://fonts.googleapis.com/css?family=Open+Sans:400,700);
@@ -148,38 +145,43 @@
         .login input[type="submit"]:focus {
             border-color: #05a;
         }
+
+        .subject {
+            height: 1000px;
+        }
     </style>
 
     <title>메인</title>
 </head>
 <body>
 <div class="main">
-<div class="header">
-    <div class="search">
+    <div class="header">
+        <div class="search">
             <input type="text" name="search" id="search" placeholder="검색어 입력">
             <input type="image" class="img" src="https://s3.ap-northeast-2.amazonaws.com/cdn.wecode.co.kr/icon/search.png" onclick="search()">
-<%--        <input type="button" class="menu" id="menuBtn" onClick="location.href='LoginPage'" value="메뉴" >--%>
-        <% if(session.getAttribute("user") == null) { %>
-        <button class="menu" id="menuBtn" onclick="location.href='/LoginPage'" value="메뉴">메뉴</button>>
-        <% } %>
-
-        <% if(session.getAttribute("user") != null) { %>
-        <button class="menu" id="menuBtn" onclick="location.href='/myPage'">메뉴</button>
-        <button id="adminOnly" onclick="window.open('/adminPage','관리자', 'width=1000,height=1200')">관</button>
-<%--        <button class="menu" id="menuBtn" onclick="location.href='/logOut'">로그아웃</button>--%>
-<%--        <button class="menu" id="menuBtn" onclick="window.open('/admin','관리자 페이지','width=1000,height=1200')">관리자 페이지</button>--%>
-        <% } %>
-
+            <input type="button" class="menu" id="menuBtn" onClick="location.href='LoginPage'" value="메뉴" >
+        </div>
+        <ul class="navbar-nav ms-auto">
+            <% if(session.getAttribute("user") == null){%>
+            <li li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="/LoginPage">로그인</a></li>
+            <%}%>
+            <!--<form  required oninput="Show()">-->
+            <% if(session.getAttribute("user") != null){%>
+            <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="/myPage">마이페이지</a></li>
+            <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="/logOut">로그아웃</a></li>
+            <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" onclick="window.open('/admin','관리자 페이지','width=1000 height=1200')">관리자 페이지</a></li>
+            <%}%>
+        </ul>
+        <input type="button" onClick="location.href='/fiesta'" value="지도" >
+        <input type="button" onClick="location.href='/gps'" value="주변 시설" >
     </div>
-
-</div>
-<div class="container">
-
-    <input type="button" onClick="location.href='/fiesta'" value="지도" >
-    <input type="button" onClick="location.href='/gps'" value="주변 시설" >
-    <input type="button" onclick="location.href='/review/reviewList'" value="리뷰">
-
-</div>
+    <div class="container" method="post" action="/WriteReg" onsubmit="return doSubmit((this))">
+        <input type="text" id="title" placeholder="제목">
+        <br><hr>
+        <input type="text" name="subject" id="subject" placeholder="내용">
+        <input type="file" id="img" placeholder="사진">
+        <input type="submit" id="write"  value="작성">
+    </div>
 </div>
 
 </body>

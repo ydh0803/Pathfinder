@@ -270,6 +270,38 @@
     </select>
         <button type="submit" id="find" onclick="getLocation()">찾기</button>
     </div>
+        <script>
+
+            function executeCode() {
+                <% if (rList != null) {
+                    FestaDTO rDTO=null;
+                    for (int i = 0; i < rList.size(); i++) {
+                    rDTO = rList.get(i);
+                }%>
+                // 이미지 생성
+                var image = document.createElement("img");
+                image.src = "<%=rDTO.getFirstimage2()%>";
+                image.style.width = "150px";
+                image.style.height = "150px";
+                document.body.appendChild(image);
+
+                // 제목에 대한 링크 생성
+                var titleLink = document.createElement("a");
+                titleLink.href = "/tour/SearchDetail?title=<%=rDTO.getTitle()%>";
+                titleLink.textContent = "<%=rDTO.getTitle()%>";
+                document.body.appendChild(titleLink);
+
+                // contentid에 대한 링크 생성
+                var contentidLink = document.createElement("a");
+                contentidLink.href = "/tour/SearchDetail?contentid=<%=rDTO.getContentid()%>";
+                contentidLink.textContent = "<%=rDTO.getTitle()%>";
+                document.body.appendChild(contentidLink);
+
+                <% } %>
+            }
+
+        </script>
+        <button type="button" class="menu" id="menuBtn" onClick="executeCode()" value="버튼">버튼</button>
     </div>
 </div>
 </div>
