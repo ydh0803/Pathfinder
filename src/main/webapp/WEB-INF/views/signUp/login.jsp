@@ -105,6 +105,8 @@
         <p><input type="password" id="userpwd" name="userpwd" placeholder="비밀번호"></p>
         <p><input type="submit" value="로그인"><input type="button" onClick="location.href='signUp'" value="회원가입" ></p>
         <p><input type="button" value="아이디 찾기"><input type="button" value="비밀번호 찾기"></p>
+
+        <a onclick="window.open('/findIdPw','회원가입페이지','height=600, width=800 location=center')">아이디&nbsp;|&nbsp;비밀번호찾기</a>
     </form>
 </div>
 </body>

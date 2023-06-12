@@ -7,7 +7,7 @@
         function mailCheck() {
             let i = document.join.mail3.selectedIndex // 선택항목의 인덱스 번호
             let domain = document.join.mail3.options[i].value // 선택항목 value
-            document.join.user_maildomain.value=domain
+            document.join.userMaildomain.value=domain
         }
         function doSubmit(f){
             if(f.user_id.value == ""){
@@ -59,7 +59,7 @@
         function mailcheck(){
             let i = document.join.mail3.selectedIndex // 선택항목의 인덱스 번호
             let mail = document.join.mail3.options[i].value // 선택항목 value
-            document.join.user_maildomain.value=mail
+            document.join.userMaildomain.value=mail
         }
         function isEmail(asValue) {
             let regExp = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;
@@ -87,8 +87,8 @@
         })
     }
     function emailCheck() {
-        let clientEmailId = document.getElementById('user_mailid').value;
-        let clientEmailDomain = document.getElementById('user_maildomain').value;
+        let clientEmailId = document.getElementById('userMailid').value;
+        let clientEmailDomain = document.getElementById('userMaildomain').value;
         console.log(clientEmailId)
         console.log(clientEmailDomain)
         if (clientEmailDomain==="" || clientEmailId===""){
@@ -99,7 +99,7 @@
             url : "/mailCheck",
             type : "POST",
             dataType :"JSON",
-            data : {user_mailid: clientEmailId , user_maildomain:clientEmailDomain},
+            data : {userMailid: clientEmailId , userMaildomain:clientEmailDomain},
             success : function (data) {
                 console.log(data)
                 if(data >= 1) {
@@ -116,7 +116,7 @@
             url : "/nameCheck",
             type : "POST",
             dataType :"JSON",
-            data : {"user_name" : $("#user_name").val()},
+            data : {"userName" : $("#userName").val()},
             success : function (data) {
                 console.log(data)
                 if(data >= 1) {
@@ -190,7 +190,7 @@
             padding: 12px;
         }
         h1 {
-            margin: 0 0 30px 0;
+            margin: 0 0 0 0;
             text-align: center;
         }
         input[type="text"],
@@ -288,7 +288,7 @@
                     <legend>내 정보</legend>
 
                     <label for="userId">아이디</label>
-                    <input type="text" id="userId" name="user_id" placeholder="아이디">
+                    <input type="text" id="userId" name="userId" placeholder="아이디">
                     <input type="hidden" class="form-control" name="idChkYN" id="idChkYN">
                     <button class="btn btn-primary" class="idChk" type="button" id="idChk" onclick="idCheck()" value="N">중복체크</button>
 
@@ -302,11 +302,13 @@
                     <input type="hidden" class="form-control" name="pwChkYN" id="pwChkYN">
 
                     <label for="userName">닉네임</label>
-                    <input type="text" id="userName" name="user_name" placeholder="닉네임">
+                    <input type="text" id="userName" name="userName" placeholder="닉네임">
+                    <input type="hidden" class="form-control" name="nameChkYN" id="nameChkYN">
+                    <button class="btn btn-primary" class="nameChk" type="button" id="nameChk" onclick="nameCheck()" value="N">중복체크</button>
 
                     <label for="userMailid">이메일</label>
                     <div class="input-group mb-3">
-                        <input type="text" class="form-control" id="userMailid" name="user_mailid" placeholder="Email">
+                        <input type="text" class="form-control" id="userMailid" name="userMailid" placeholder="Email">
                         <span class="input-group-text">@</span>
                         <select style="height: 54px; background: #e8eeef;" class="form-control" name="mail3" onchange="mailCheck()">
                             <optgroup label="Web">

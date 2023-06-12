@@ -5,12 +5,11 @@ import com.example.pathfinder.dto.CommentDTO;
 import com.example.pathfinder.dto.Criteria;
 import org.apache.ibatis.annotations.Mapper;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Mapper
 public interface IBoardMapper {
+//    void writeBoard(BoardDTO boardDTO) throws Exception;
     int Upload(BoardDTO pDTO);
 
     int totalCount(Criteria cri) throws Exception;
@@ -37,4 +36,5 @@ public interface IBoardMapper {
     int getRepCnt(CommentDTO pDTO);
 
     void repDelete(CommentDTO pDTO);
+
 }

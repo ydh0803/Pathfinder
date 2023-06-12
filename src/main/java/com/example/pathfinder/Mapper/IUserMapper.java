@@ -17,4 +17,14 @@ public interface IUserMapper {
     UserDTO mailCheck(UserDTO pDTO);
 
     List<NoticeDTO> getNoticeList();
+
+    //회원 비밀번호 체크
+    int pwCheck(UserDTO pDTO);
+
+    //회원 비밀번호 변경
+    void chgPw(UserDTO pDTO) throws Exception;
+
+    //회원 비밀번호 변경
+    void chgName(UserDTO pDTO) throws Exception;
+
 }

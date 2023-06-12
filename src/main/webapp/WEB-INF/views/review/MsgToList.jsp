@@ -1,7 +1,8 @@
+<%@ page import="com.example.pathfinder.util.CmmUtil" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8"%>
-<%@ page import="com.example.pathfinder.util.CmmUtil" %>
 <%
+
     //전달받은 메시지
     String msg = CmmUtil.nvl((String)request.getAttribute("msg"));
 %>
@@ -11,8 +12,9 @@
     <meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
     <title>처리페이지</title>
     <script type="text/javascript">
+
         alert("<%=msg%>");
-        top.location.href="/index";
+        top.location.href="/review/reviewList";
 
     </script>
 </head>

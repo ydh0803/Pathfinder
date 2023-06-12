@@ -4,6 +4,7 @@ import com.example.pathfinder.dto.*;
 import com.example.pathfinder.service.impl.BoardService;
 import com.example.pathfinder.util.CmmUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -23,60 +24,56 @@ import java.util.*;
 @Slf4j
 public class BoardController {
 
+
     private final BoardService boardService;
 
 
     public BoardController(BoardService boardService) {
         this.boardService = boardService;
     }
-    @GetMapping("/review/reviewList")
-    public String reviewList() {
-        return "/review/reviewList";
-    }
 
-    @GetMapping("/review/reviewWrite")
-    public String reviewWrite() {
+        @GetMapping("/review/reviewWrite")
+        public String reviewWrite() {
         return "/review/reviewWrite";
     }
+
+
 
     @PostMapping("/upload")
     public String execWrite(MultipartHttpServletRequest request, Model model) throws IOException {
         log.info(this.getClass().getName() + ".execWrite start");
         String title = CmmUtil.nvl(request.getParameter("title"));
-        String coursename = CmmUtil.nvl(request.getParameter("s2"));
         String contents = CmmUtil.nvl(request.getParameter("contents"));
-        if(!Objects.requireNonNull(request.getFile("file")).isEmpty()) {
-            MultipartFile file = request.getFile("file");
-//            String imgPath = s3Service.upload(file);
-//            String imglink = "https://d1y3hanryj5vy8.cloudfront.net/" + imgPath;
-            Integer user_no = Integer.parseInt(request.getParameter("user_no"));
-            log.info(title);
-            log.info(coursename);
-            log.info(contents);
-//            log.info(imglink);
-            log.info(String.valueOf(user_no));
+        log.info(title);
+//        if(!Objects.requireNonNull(request.getFile("file")).isEmpty()) {
+//            MultipartFile file = request.getFile("file");
+////            String imgPath = s3Service.upload(file);
+////            String imglink = "https://d1y3hanryj5vy8.cloudfront.net/" + imgPath;
+//            Integer userNo = Integer.parseInt(request.getParameter("userNo"));
+//            log.info(title);
+//            log.info(contents);
+////            log.info(imglink);
+//            log.info(String.valueOf(userNo));
+//            BoardDTO pDTO = new BoardDTO();
+//            pDTO.setTitle(title);
+//            pDTO.setContents(contents);
+//            pDTO.setUserNo(String.valueOf(userNo));
+////            pDTO.setImglink(imglink);
+//            boardService.Upload(pDTO);
+//            String msg = "글이 작성되었습니다.";
+//            model.addAttribute("msg", msg);
+//        }else{
+            int userNo = Integer.parseInt(request.getParameter("userNo"));
             BoardDTO pDTO = new BoardDTO();
             pDTO.setTitle(title);
-            pDTO.setCoursename(coursename);
             pDTO.setContents(contents);
-            pDTO.setUser_no(user_no);
-//            pDTO.setImglink(imglink);
-            boardService.Upload(pDTO);
-            String msg = "글이 작성되었습니다.";
-            model.addAttribute("msg", msg);
-        }else{
-            int user_no = Integer.parseInt(request.getParameter("user_no"));
-            BoardDTO pDTO = new BoardDTO();
-            pDTO.setTitle(title);
-            pDTO.setCoursename(coursename);
-            pDTO.setContents(contents);
-            pDTO.setUser_no(user_no);
+            pDTO.setUserNo(String.valueOf(userNo));
             boardService.Upload(pDTO);
             String msg = "글이 작성되었습니다.";
             model.addAttribute("msg", msg);
 
-        }
-        return "/board/MsgToList";
+//        }
+        return "/review/MsgToList";
 
     }
 
@@ -88,11 +85,11 @@ public class BoardController {
         UserDTO uDTO = (UserDTO) session.getAttribute("user");
         for (Map<String, Object> list : params) {
             String comment = (String) list.get("comment");
-            Integer bNo = (Integer) list.get("board_no");
+            Integer bNo = (Integer) list.get("boardNo");
             CommentDTO pDTO = new CommentDTO();
-            pDTO.setUser_no(uDTO.getUserNo());
-            pDTO.setBoard_no(bNo);
-            pDTO.setComment_text(comment);
+            pDTO.setUserNo(uDTO.getUserNo());
+            pDTO.setBoardNo(bNo);
+            pDTO.setCommentText(comment);
             boardService.insertComment(pDTO);
         }
     }
@@ -104,11 +101,11 @@ public class BoardController {
         List<Map<String, Object>> param = objectMapper.convertValue(params, new TypeReference<List<Map<String, Object>>>(){});*/
 
         for (Map<String, Object> list : params) {
-            String comment = (String) list.get("comment_text");
-            int comment_no = (int) list.get("comment_no");
+            String comment = (String) list.get("commentText");
+            int commentNo = (int) list.get("commentNo");
             CommentDTO pDTO = new CommentDTO();
-            pDTO.setComment_text(comment);
-            pDTO.setComment_no(comment_no);
+            pDTO.setCommentText(comment);
+            pDTO.setCommentNo(commentNo);
             boardService.commentUpdate(pDTO);
         }
     }
@@ -117,16 +114,16 @@ public class BoardController {
     @PostMapping(value = "repDelete")
     public int repDelete(@RequestBody List<Map<String, Object>> params) {
         for (Map<String, Object> list : params) {
-            String comment_no = (String) list.get("comment_no");
-            int cNo = Integer.parseInt(comment_no);
+            String commentNo = (String) list.get("commentNo");
+            int cNo = Integer.parseInt(commentNo);
             CommentDTO pDTO = new CommentDTO();
-            pDTO.setComment_no(cNo);
+            pDTO.setCommentNo(cNo);
             boardService.repDelete(pDTO);
         }
         return 1;
     }
 
-    @GetMapping(value = "board/boardInfo")
+    @GetMapping(value = "/review/reviewDetail")
     public String NoticeInfo(HttpServletRequest request, ModelMap model, Criteria cri) {
 
         log.info(this.getClass().getName() + ".boardInfo start!");
@@ -148,13 +145,13 @@ public class BoardController {
              * 값 전달은 반드시 DTO 객체를 이용해서 처리함 전달 받은 값을 DTO 객체에 넣는다.
              */
             BoardDTO pDTO = new BoardDTO();
-            pDTO.setBoard_no(Integer.parseInt(bNo));
+            pDTO.setBoardNo(Integer.parseInt(bNo));
 
             // 공지사항 상세정보 가져오기
             BoardDTO rDTO = boardService.getBoardInfo(pDTO);
 
             CommentDTO cDTO = new CommentDTO();
-            cDTO.setBoard_no(Integer.parseInt(bNo));
+            cDTO.setBoardNo(Integer.parseInt(bNo));
             List<CommentDTO> rList = boardService.getComment(cDTO);
             int res = boardService.getRepCnt(cDTO);
 
@@ -176,46 +173,43 @@ public class BoardController {
 
         log.info(this.getClass().getName() + ".boardInfo end!");
 
-        return "/board/boardInfo";
+        return "/review/reviewDetail";
     }
-    @GetMapping(value = "/board/boardEditInfo")
+    @GetMapping(value = "/review/reviewEdit")
     public String BoardEditInfo(HttpServletRequest request, ModelMap model) throws Exception {
         log.info(this.getClass().getName() + ".BoardEditInfo start!");
         String msg = "";
         String nSeq = CmmUtil.nvl(request.getParameter("nSeq")); // 글번호(PK)
         log.info("nSeq : " + nSeq);
         BoardDTO pDTO = new BoardDTO();
-        pDTO.setBoard_no(Integer.parseInt(nSeq));
+        pDTO.setBoardNo(Integer.parseInt(nSeq));
         BoardDTO rDTO = boardService.getBoardInfo(pDTO);
         if (rDTO == null) {
             rDTO = new BoardDTO();
         }
         model.addAttribute("rDTO", rDTO);
         log.info(this.getClass().getName() + ".BoardEditInfo end!");
-        return "/board/boardEditInfo";
+        return "/review/reviewEdit";
     }
 
-    @PostMapping(value = "/boardUpdate")
+    @PostMapping(value = "/reviewUpdate")
     public String boardUpdate(MultipartHttpServletRequest request, Model model) throws Exception {
         String title = CmmUtil.nvl(request.getParameter("title"));
-        String coursename = CmmUtil.nvl(request.getParameter("s2"));
         String contents = CmmUtil.nvl(request.getParameter("contents"));
-        int board_no = Integer.parseInt(CmmUtil.nvl(request.getParameter("nSeq")));
-        String imgLink = CmmUtil.nvl(request.getParameter("imgLink"));
+        int boardNo = Integer.parseInt(CmmUtil.nvl(request.getParameter("nSeq")));
+        String img = CmmUtil.nvl(request.getParameter("img"));
         if(!Objects.requireNonNull(request.getFile("file")).isEmpty()) {
 //            s3Service.deleteS3(imgLink);
             MultipartFile file = request.getFile("file");
 //            String imgPath = s3Service.upload(file);
 //            String imglink = "https://d1y3hanryj5vy8.cloudfront.net/" + imgPath;
             log.info(title);
-            log.info(coursename);
             log.info(contents);
 //            log.info(imglink);
             BoardDTO pDTO = new BoardDTO();
             pDTO.setTitle(title);
-            pDTO.setCoursename(coursename);
             pDTO.setContents(contents);
-            pDTO.setBoard_no(board_no);
+            pDTO.setBoardNo(boardNo);
 //            pDTO.setImglink(imglink);
             boardService.boardUpdate(pDTO);
             String msg = "글이 수정되었습니다.";
@@ -223,40 +217,39 @@ public class BoardController {
         }else{
             BoardDTO pDTO = new BoardDTO();
             pDTO.setTitle(title);
-            pDTO.setCoursename(coursename);
             pDTO.setContents(contents);
-            pDTO.setBoard_no(board_no);
-            pDTO.setImglink(imgLink);
+            pDTO.setBoardNo(boardNo);
+//            pDTO.setImglink(imglink);
             boardService.boardUpdate(pDTO);
             String msg = "글이 수정되었습니다.";
             model.addAttribute("msg", msg);
         }
-        return "/board/MsgToList";
+        return "/review/MsgToList";
 
     }
 
-    @GetMapping(value = "/boardDelete")
+    @GetMapping(value = "/reviewDelete")
     public String boardDelete(HttpServletRequest request, Model model) throws Exception{
-        int board_no = Integer.parseInt(CmmUtil.nvl(request.getParameter("nSeq")));
+        int boardNo = Integer.parseInt(CmmUtil.nvl(request.getParameter("nSeq")));
         BoardDTO pDTO = new BoardDTO();
-        pDTO.setBoard_no(board_no);
+        pDTO.setBoardNo(boardNo);
         BoardDTO rDTO = boardService.getBoardInfo(pDTO);
-        if (rDTO.getImglink() != null) {
-            String[] fileName = rDTO.getImglink().split("/");
+//        if (rDTO.getImglink() != null) {
+//            String[] fileName = rDTO.getImglink().split("/");
 //            s3Service.deleteS3(fileName[3]);
+//            boardService.boardDelete(pDTO);
+//            String msg = "게시글이 삭제 되었습니다.";
+//            model.addAttribute("msg",msg);
+//            return "/review/MsgToList";
+//        }else {
             boardService.boardDelete(pDTO);
             String msg = "게시글이 삭제 되었습니다.";
             model.addAttribute("msg",msg);
-            return "/board/MsgToList";
-        }else {
-            boardService.boardDelete(pDTO);
-            String msg = "게시글이 삭제 되었습니다.";
-            model.addAttribute("msg",msg);
-            return "/board/MsgToList";
-        }
+            return "/review/MsgToList";
+//        }
     }
 
-    @GetMapping("/board/list")
+    @GetMapping("/review/reviewList")
     public String boardListGET(HttpServletRequest request, Model model, Criteria cri) throws Exception {
         int pNo = 1;
         if (request.getParameter("pNo") != null) {
@@ -271,7 +264,7 @@ public class BoardController {
             PageMakeDTO pageMake = new PageMakeDTO(cri, total);
 
             model.addAttribute("pageMaker", pageMake);
-            return "/board/list";
+            return "/review/ReviewList";
         }
         log.info("boardListGET");
 
@@ -284,7 +277,8 @@ public class BoardController {
         PageMakeDTO pageMake = new PageMakeDTO(cri, total);
 
         model.addAttribute("pageMaker", pageMake);
-        return "/board/list";
+        return "/review/reviewList";
     }
+
 
 }

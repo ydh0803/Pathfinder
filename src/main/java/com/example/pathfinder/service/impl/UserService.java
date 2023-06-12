@@ -51,78 +51,99 @@ public class UserService implements IUserService {
         String userId = CmmUtil.nvl(pDTO.getUserId());
         log.info(userId);
 
+
         UserDTO rDTO = userMapper.idCheck(pDTO);
-
-
-
         if (rDTO == null) {
-            rDTO = new UserDTO();
-        }
-
-        if (CmmUtil.nvl(rDTO.getUsesExists()).equals("Y")){
-            res = 1;
-        }else{
             res = 0;
-
+        } else {
+            String userId2 = CmmUtil.nvl(rDTO.getUserId());
+            log.info(userId2);
+            if (userId.equals(userId2)) {
+                res = 1;
+            } else {
+                res = 0;
+            }
         }
-        log.info(this.getClass().getName() + ".idCheck end");
         return res;
     }
 
-    @Override
+
+        @Override
     public int nameCheck(UserDTO pDTO) {
         log.info(this.getClass().getName() + ".nameCheck start");
 
         int res = 0;
-        String user_name = CmmUtil.nvl(pDTO.getUserName());
-        log.info(user_name);
+        String userName = CmmUtil.nvl(pDTO.getUserName());
+        log.info(userName);
 
         UserDTO rDTO = userMapper.nameCheck(pDTO);
 
-        if (rDTO == null) {
-            rDTO = new UserDTO();
-        }
-
-        if (CmmUtil.nvl(rDTO.getUsesExists()).equals("Y")){
-            res = 1;
-        }else{
-            res = 0;
-
-        }
-
-        log.info(String.valueOf(res));
-        log.info(this.getClass().getName() + ".idCheck end");
-        return res;
+            if (rDTO == null) {
+                res = 0;
+            } else {
+                String userName2 = CmmUtil.nvl(rDTO.getUserName());
+                log.info(userName2);
+                if (userName.equals(userName2)) {
+                    res = 1;
+                } else {
+                    res = 0;
+                }
+            }
+            return res;
     }
 
     @Override
     public int mailCheck(UserDTO pDTO) {
         int res = 0;
-        String user_mailid = CmmUtil.nvl(pDTO.getUserMailid());
-        String user_maildomain = CmmUtil.nvl(pDTO.getUserMaildomain());
-        log.info(user_mailid+"@"+user_maildomain);
+        String userMailid = CmmUtil.nvl(pDTO.getUserMailid());
+        String userMaildomain = CmmUtil.nvl(pDTO.getUserMaildomain());
+        log.info(userMailid+"@"+userMaildomain);
+
+        String Mail = userMailid + "@" + userMaildomain;
+        log.info(Mail);
 
         UserDTO rDTO = userMapper.mailCheck(pDTO);
+        log.info("ggg" + rDTO);
 
         if (rDTO == null) {
-            rDTO = new UserDTO();
-        }
-
-        if (CmmUtil.nvl(rDTO.getUsesExists()).equals("Y")) {
-            res = 1;
-        } else {
             res = 0;
-
+        } else {
+            String userMailid2 = CmmUtil.nvl(rDTO.getUserMailid());
+            String userMaildomain2 = CmmUtil.nvl(rDTO.getUserMaildomain());
+            String Mail2 = userMailid2 + "@" + userMaildomain2;
+            log.info(Mail2);
+            if (Mail.equals(Mail2)) {
+                res = 1;
+            } else {
+                res = 0;
+            }
         }
-
-        log.info(String.valueOf(res));
-        log.info(this.getClass().getName() + ".mailCheck end");
         return res;
     }
 
     @Override
     public List<NoticeDTO> getNoticeList() {
         return userMapper.getNoticeList();
+    }
+
+    @Override
+    public int pwCheck(UserDTO pDTO) {
+        log.info(this.getClass().getName()+".pwCheck start");
+        return userMapper.pwCheck(pDTO);
+
+
+    }
+
+    @Override
+    public int chgPw(UserDTO pDTO) throws Exception {
+        userMapper.chgPw(pDTO);
+        return 0;
+    }
+
+    @Override
+    public int chgName(UserDTO pDTO) throws Exception {
+        userMapper.chgName(pDTO);
+        return 0;
     }
 
 

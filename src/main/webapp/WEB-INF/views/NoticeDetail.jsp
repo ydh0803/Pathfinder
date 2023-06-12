@@ -1,44 +1,76 @@
 <%@ page import="com.example.pathfinder.dto.UserDTO" %>
+<%@ page import="java.util.Objects" %>
+<%@ page import="com.example.pathfinder.dto.NoticeDTO" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
+    NoticeDTO rDTO = (NoticeDTO) request.getAttribute("rDTO");
+    int res = (Integer) request.getAttribute("res");
 
+//공지글 정보를 못불러왔다면, 객체 생성
+    if (rDTO == null) {
+        rDTO = new NoticeDTO();
+
+    }
     int edit = 1;
+
 //본인이 작성한 글만 수정 가능하도록 하기(1:작성자 아님 / 2: 본인이 작성한 글 / 3: 로그인안함)
     if (session.getAttribute("user")==null) {
         edit = 3;
     } else {
         UserDTO uDTO = (UserDTO) session.getAttribute("user");
-        int ss_userNo = uDTO.getUserNo();
+        String ss_user_name = uDTO.getUserName();
+
 //로그인 안했다면....
-    }
-    int rep = 0;
-    if (session.getAttribute("user")!=null) {
-        UserDTO uDTO = (UserDTO) session.getAttribute("user");
-        rep = uDTO.getUserNo();
+        if (uDTO == null) {
+            edit = 3;
+
+//본인이 작성한 글이면 2가 되도록 변경
+        } else if (Objects.equals(ss_user_name, rDTO.getAdminname())) {
+
+            edit = 2;
+
+        }
     }
 %>
 <head>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-    function search() {
-        let keyword = $('#search').val()
-        console.log(keyword)
-        let aaa = encodeURI(keyword)
-        console.log(aaa)
+    <script>
+        function search() {
+            let keyword = $('#search').val()
+            console.log(keyword)
+            let aaa = encodeURI(keyword)
+            console.log(aaa)
 
-        location.href="/keywordSearch?AR=" + aaa
-    }
-
-    function chksearch() {
-        if(f.search.value == ""){
-            alert("검색어를 입력해주세요.");
-            f.search.focus();
-            return false;
+            location.href="/keywordSearch?AR=" + aaa
         }
-    }
 
+        function chksearch() {
+            if(f.search.value == ""){
+                alert("검색어를 입력해주세요.");
+                f.search.focus();
+                return false;
+            }
+        }
 
-</script>
+        //삭제하기
+        function goAdmin(){
+            location.href="/admin"
+        }
+        function doDelete() {
+            if ("<%=edit%>" == 2) {
+                if (confirm("작성한 글을 삭제하시겠습니까?")) {
+                    location.href = "/noticeDelete?nSeq=<%=rDTO.getNoticeNo()%>";
+
+                }
+            } else if ("<%=edit%>" == 3) {
+                alert("로그인 하시길 바랍니다.");
+
+            } else {
+                alert("본인이 작성한 글만 삭제 가능합니다.");
+            }
+        }
+
+    </script>
     <style>
         .search {
             position: relative;
@@ -161,32 +193,46 @@
 </head>
 <body>
 <div class="main">
-<div class="header">
-    <div class="search">
+    <div class="header">
+        <div class="search">
             <input type="text" name="search" id="search" placeholder="검색어 입력">
             <input type="image" class="img" src="https://s3.ap-northeast-2.amazonaws.com/cdn.wecode.co.kr/icon/search.png" onclick="search()">
-<%--        <input type="button" class="menu" id="menuBtn" onClick="location.href='LoginPage'" value="메뉴" >--%>
-        <% if(session.getAttribute("user") == null) { %>
-        <button class="menu" id="menuBtn" onclick="location.href='/LoginPage'" value="메뉴">메뉴</button>
-        <% } %>
+            <%--        <input type="button" class="menu" id="menuBtn" onClick="location.href='LoginPage'" value="메뉴" >--%>
+            <% if(session.getAttribute("user") == null) { %>
+            <button class="menu" id="menuBtn" onclick="location.href='/LoginPage'" value="메뉴">메뉴</button>
+            <% } %>
 
-        <% if(session.getAttribute("user") != null) { %>
-        <button class="menu" id="menuBtn" onclick="location.href='/myPage'">메뉴</button>
-        <button class="admin" id="adminOnly" onclick="window.open('/adminPage','관리자', 'width=1000,height=1200')">관</button>
-<%--        <button class="menu" id="menuBtn" onclick="location.href='/logOut'">로그아웃</button>--%>
-<%--        <button class="menu" id="menuBtn" onclick="window.open('/admin','관리자 페이지','width=1000,height=1200')">관리자 페이지</button>--%>
-        <% } %>
+            <% if(session.getAttribute("user") != null) { %>
+            <button class="menu" id="menuBtn" onclick="location.href='/myPage'">메뉴</button>
+            <button class="admin" id="adminOnly" onclick="window.open('/adminPage','관리자', 'width=1000,height=1200')">관</button>
+            <% } %>
+
+        </div>
 
     </div>
+    <div class="container">
+        <h2>공지</h2>
 
-</div>
-<div class="container">
+        <div class="box" style="width: 100%; font-size: 24px">
+            <%=rDTO.getTitle()%>
+        </div>
+        <hr>
+        <div class="box" style="display:flex;width: 100%;color: #272a15">
+            <p>작성자:<%=rDTO.getAdminname()%>&nbsp;&nbsp;|&nbsp;&nbsp;</p><p>작성일:<%=rDTO.getRegdate().substring(0,16)%></p>
+        </div>
+        <hr>
+        <div class="box" style="width: 100%; font-size:16px">
+            <p><%=rDTO.getContents()%></p>
+        </div>
+        <div style="font-size: 18px" class="box">
+            <%if (edit==2){%>
+            <a onclick="goAdmin()">[목록]</a>
+            <a onclick="doDelete()">[삭제]</a>
+            <%}%>
+        </div>
 
-    <input type="button" onClick="location.href='/fiesta'" value="지도" >
-    <input type="button" onClick="location.href='/gps'" value="주변 시설" >
-    <input type="button" onclick="location.href='/review/reviewList'" value="리뷰">
 
-</div>
+    </div>
 </div>
 
 </body>

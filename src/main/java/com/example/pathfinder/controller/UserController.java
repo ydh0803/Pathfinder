@@ -162,9 +162,62 @@ public class UserController {
         return res;
     }
 
-    @GetMapping("/adminPage")
-    public String adminPage(){
-        return "/signUp/ddd";
+
+
+    @PostMapping(value= "/user/pwCheck")
+    public String pwCheck(HttpServletRequest request, Model model) {
+        String userPw = UseSha256.encrypt(request.getParameter("userPw"));
+        log.info(userPw);
+        int userNo = Integer.parseInt(request.getParameter("userNo"));
+        log.info(String.valueOf(userNo));
+        UserDTO pDTO = new UserDTO();
+        pDTO.setUserPw(userPw);
+        pDTO.setUserNo(userNo);
+        int result = userService.pwCheck(pDTO);
+
+        if (result == 1) {
+            return "/signUp/chgPW";
+        }else {
+            String msg = "비밀번호가 틀렸습니다";
+            model.addAttribute("msg", msg);
+            return "/signUp/MsgToMain";
+        }
+
+    }
+
+    @GetMapping(value = "/user/chgName")
+    public String chgNameForm() {
+        return "/signUp/chgName";
+    }
+
+    @PostMapping(value = "/user/chgName")
+    public String chgName(HttpServletRequest request, Model model, HttpSession session) throws Exception {
+        String userName = request.getParameter("userName");
+        int userNo = Integer.valueOf(request.getParameter("userNo"));
+        UserDTO pDTO = new UserDTO();
+        pDTO.setUserName(userName);
+        pDTO.setUserNo(userNo);
+        userService.chgName(pDTO);
+        session.invalidate();
+        model.addAttribute("msg","닉네임이 변경되었습니다. 다시 로그인 해주시기 바랍니다.");
+
+        return "/signUp/popupclose";
+
+    }
+
+    @PostMapping(value = "/user/chgPw")
+    public String chgPw(HttpServletRequest request, Model model, HttpSession session) throws Exception {
+        String pw = UseSha256.encrypt(request.getParameter("pw"));
+        int userNo = Integer.parseInt(request.getParameter("userNo"));
+        UserDTO pDTO = new UserDTO();
+        pDTO.setUserPw(pw);
+        pDTO.setUserNo(userNo);
+        int res =  userService.chgPw(pDTO);
+        session.invalidate();
+        String msg = "비밀번호가 변경되었습니다. 다시 로그인 해주세요";
+        model.addAttribute("msg",msg);
+        return "/signUp/popupclose";
+
     }
 
 }

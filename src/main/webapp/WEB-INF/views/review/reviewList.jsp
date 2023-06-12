@@ -1,4 +1,8 @@
 <%@ page import="com.example.pathfinder.dto.UserDTO" %>
+<%@ page import="com.example.pathfinder.util.CmmUtil" %>
+<%@ page import="com.example.pathfinder.dto.BoardDTO" %>
+<%@ page import="java.util.List" %>
+<%@ page import="java.util.ArrayList" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
 
@@ -8,13 +12,21 @@
         edit = 3;
     } else {
         UserDTO uDTO = (UserDTO) session.getAttribute("user");
-        int ss_user_no = uDTO.getUserNo();
+        int ss_userNo = uDTO.getUserNo();
 //로그인 안했다면....
     }
     int rep = 0;
     if (session.getAttribute("user")!=null) {
         UserDTO uDTO = (UserDTO) session.getAttribute("user");
         rep = uDTO.getUserNo();
+    }
+%>
+<%
+    List<BoardDTO> rList = (List<BoardDTO>) request.getAttribute("list");
+
+//게시판 조회 결과 보여주기
+    if (rList == null) {
+        rList = new ArrayList<>();
     }
 %>
 <head>
@@ -35,6 +47,14 @@
                 f.search.focus();
                 return false;
             }
+        }
+
+        function doDetail(bNo) {
+            location.href = "/review/reviewDetail?bNo=" + bNo;
+        }
+        function doPaging(pNo) {
+            let loc = window.location.href;
+            location.href = loc+"&pNo="+pNo;
         }
     </script>
     <style>
@@ -145,6 +165,88 @@
         .login input[type="submit"]:focus {
             border-color: #05a;
         }
+
+
+        ul, li{
+            list-style:none;
+            text-align:center;
+            padding:0;
+            margin:0;
+        }
+
+        #mainWrapper{
+            width: 80%;
+            margin: 0 auto; /*가운데 정렬*/
+        }
+
+        #mainWrapper > ul > li:first-child {
+            text-align: center;
+            font-size:14pt;
+            height:40px;
+            vertical-align:middle;
+            line-height:30px;
+        }
+
+        #ulTable {margin-top:10px;}
+
+
+        #ulTable > li:first-child > ul > li {
+            background-color:#c9c9c9;
+            font-weight:bold;
+            text-align:center;
+        }
+
+        #ulTable > li > ul {
+            clear:both;
+            padding:0px;
+            position:relative;
+            min-width:40px;
+        }
+        #ulTable > li > ul > li {
+            float:left;
+            font-size:10pt;
+            border-bottom:1px solid silver;
+            vertical-align:baseline;
+        }
+
+        #ulTable > li > ul > li:first-child           	{width:10%;} /*No 열 크기*/
+        #ulTable > li > ul > li:first-child +li       	{width:30%;} /*제목 열 크기*/
+        #ulTable > li > ul > li:first-child +li+li    	{width:25%;} /*코스명 열 크기*/
+        #ulTable > li > ul > li:first-child +li+li+li 	{width:15%;} /*작성자 열 크기*/
+        #ulTable > li > ul > li:first-child +li+li+li+li{width:20%;} /*작성일 열 크기*/
+
+        #divPaging {
+            padding-top: 20px;
+            clear:both;
+            margin:0 auto;
+            max-width:1400px;
+            height:50px;
+        }
+
+        #divPaging > div {
+            width: 30px;
+            margin:0 auto;
+            text-align:center;
+        }
+        #divPaging > .write {
+            float:left;
+            width: 70px;
+            margin:0 auto;
+            text-align:center;
+        }
+
+        #liSearchOption {clear:both;}
+        #liSearchOption > div {
+            margin:0 auto;
+            margin-top: 30px;
+            width:auto;
+            height:100px;
+
+        }
+
+        .left {
+            text-align : left;
+        }
     </style>
 
     <title>메인</title>
@@ -157,24 +259,64 @@
             <input type="image" class="img" src="https://s3.ap-northeast-2.amazonaws.com/cdn.wecode.co.kr/icon/search.png" onclick="search()">
             <input type="button" class="menu" id="menuBtn" onClick="location.href='LoginPage'" value="메뉴" >
         </div>
-        <ul class="navbar-nav ms-auto">
-            <% if(session.getAttribute("user") == null){%>
-            <li li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="/LoginPage">로그인</a></li>
-            <%}%>
-            <!--<form  required oninput="Show()">-->
-            <% if(session.getAttribute("user") != null){%>
-            <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="/myPage">마이페이지</a></li>
-            <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="/logOut">로그아웃</a></li>
-            <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" onclick="window.open('/admin','관리자 페이지','width=1000 height=1200')">관리자 페이지</a></li>
-            <%}%>
-        </ul>
-        <input type="button" onClick="location.href='/fiesta'" value="지도" >
-        <input type="button" onClick="location.href='/gps'" value="주변 시설" >
+
+
     </div>
     <div class="container">
-        <a>여기 리스트</a>
-        <button id="write" onclick="location.href='/review/reviewWrite'" >작성</button>
+        <a>게시글 목록</a></br>
+        <ul id ="ulTable">
+            <li>
+                <ul>
+                    <li>No</li>
+                    <li>제목</li>
+                    <li>작성자</li>
+                    <li>작성일</li>
+                </ul>
+            </li>
+        <%
+            for (int i = 0; i < rList.size(); i++) {
+                BoardDTO rDTO = rList.get(i);
+
+                if (rDTO == null) {
+                    rDTO = new BoardDTO();
+                }
+
+        %>
+        <li>
+            <ul>
+                <li><%=rDTO.getBoardNo()%></li>
+                <li><a href="javascript:doDetail('<%=rDTO.getBoardNo()%>');">
+                    <%=CmmUtil.nvl(rDTO.getTitle())%>
+                </a></li>
+                <li><%=rDTO.getUserName()%></li></li>
+                <li><%=rDTO.getRegdate().substring(0,16)%></li>
+            </ul>
+        </li>
+        <%
+            }
+        %>
+
+        </ul>
+        <!-- 게시판 페이징 영역 -->
+        <li>
+            <div id="divPaging">
+                <% if (session.getAttribute("user")!=null){%>
+                <div style="text-align: left" class="write">
+                    <button id="write" onclick="location.href='/review/reviewWrite'" >작성</button>
+                </div>
+                <%
+
+                    }%>
+                <div style="text-align: center;display: flex">
+                    <c:forEach var="num" begin="${pageMaker.startPage}" end="${pageMaker.endPage}">
+                        <div><a href="/review/reviewList?pNo=${num}">${num}</a></div>
+                    </c:forEach>
+                </div>
+            </div>
+        </li>
     </div>
+
+
 </div>
 
 </body>

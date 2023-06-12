@@ -1,21 +1,21 @@
 <%@ page import="com.example.pathfinder.dto.UserDTO" %>
+<%@ page import="com.example.pathfinder.util.CmmUtil" %>
+<%@ page import="com.example.pathfinder.dto.BoardDTO" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
-
-    int edit = 1;
-//본인이 작성한 글만 수정 가능하도록 하기(1:작성자 아님 / 2: 본인이 작성한 글 / 3: 로그인안함)
+    BoardDTO rDTO = (BoardDTO)request.getAttribute("rDTO");
+    int access = 1; //(작성자 : 2 / 다른 사용자: 1)
     if (session.getAttribute("user")==null) {
-        edit = 3;
-    } else {
+        access = 1;
+    }else {
         UserDTO uDTO = (UserDTO) session.getAttribute("user");
-        int ss_userNo = uDTO.getUserNo();
-//로그인 안했다면....
+
+        if (uDTO.getUserNo() == Integer.parseInt(rDTO.getUserNo())) {
+            access = 2;
+        }
     }
-    int rep = 0;
-    if (session.getAttribute("user")!=null) {
-        UserDTO uDTO = (UserDTO) session.getAttribute("user");
-        rep = uDTO.getUserNo();
-    }
+
+
 %>
 <head>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -51,6 +51,76 @@
         //         document.getElementById('preview').src = "";
         //     }
         // }
+
+        //작성자 여부체크
+        function doOnload(){
+
+            if ("<%=access%>"=="1"){
+                alert("작성자만 수정할 수 있습니다.");
+                location.href="/review/reviewList";
+
+            }
+        }
+
+        //전송시 유효성 체크
+        function doSubmit(f){
+            if(f.title.value == ""){
+                alert("제목을 입력하시기 바랍니다.");
+                f.title.focus();
+                return false;
+            }
+
+            if(calBytes(f.title.value) > 200){
+                alert("최대 200Bytes까지 입력 가능합니다.");
+                f.title.focus();
+                return false;
+            }
+
+            if(f.contents.value == ""){
+                alert("내용을 입력하시기 바랍니다.");
+                f.contents.focus();
+                return false;
+            }
+            if (f.s2.value == ""){
+                alert("코스를 선택해주시기 바랍니다");
+                f.s2.focus();
+                return false
+            }
+
+            if(calBytes(f.contents.value) > 4000){
+                alert("최대 4000Bytes까지 입력 가능합니다.");
+                f.contents.focus();
+                return false;
+            }
+
+
+        }
+        $(document).ready(function () {
+            $("preview").click(function () {
+                $(this).attr('src',"");
+            })
+        });
+
+        //글자 길이 바이트 단위로 체크하기(바이트값 전달)
+        function calBytes(str){
+
+            var tcount = 0;
+            var tmpStr = new String(str);
+            var strCnt = tmpStr.length;
+
+            var onechar;
+            for (i=0;i<strCnt;i++){
+                onechar = tmpStr.charAt(i);
+
+                if (escape(onechar).length > 4){
+                    tcount += 2;
+                }else{
+                    tcount += 1;
+                }
+            }
+
+            return tcount;
+        }
 
     </script>
     <style>
@@ -179,14 +249,32 @@
         </div>
     </div>
     <div class="container">
-        <form method="post" class="ui large form" encType="multipart/form-data" action="/upload">
-            <input type="text" id="title" name="title" placeholder="제목">
-            <input type="hidden" name="userNo" id="userNo" value="${user.userNo}">
+        <form method="post" class="ui large form" encType="multipart/form-data" action="/reviewUpdate">
+            <input type="text" id="title" name="title" value="<%=rDTO.getTitle()%>" placeholder="제목" autocomplete="off" autofocus="autofocus">
+            <input type="hidden" name="nSeq" value="<%=CmmUtil.nvl(request.getParameter("nSeq")) %>" />
             <br><hr>
-            <textarea style="resize: vertical;" id="contents" name="contents" placeholder="내용" rows="8"></textarea>
-            <input type="file" id="imglink" placeholder="사진">
-<%--            <input style="display: none;" type="file" id="file" name="file" onchange="readURL(this);">--%>
-            <input type="submit" id="write" value="작성"><input type="button" onclick="/reviewList" value="취소">
+            <div class="field">
+                <h4 align="left">내용</h4>
+                <div class="ui left icon input">
+                    <textarea style="resize: vertical;" id="contents" name="contents" placeholder="게시글 내용" rows="8"><%=rDTO.getContents()%></textarea>
+                </div>
+            </div>
+            <div class="field">
+                <label class="input-file-button" for="file">
+                    사진첨부
+                </label>
+                <input style="display: none;" type="file" id="file" name="file" onchange="readURL(this);">
+                <input type="hidden" id="imgLink" name="imgLink" value="<%=rDTO.getImglink()%>">
+                <% if (rDTO.getImglink() != ""){
+                %>
+                <img id="preview" style="height: 450px;width: 350px" src="<%=rDTO.getImglink()%>" />
+                <%}else{%>
+                <img id="preview" />
+                <%}%>
+            </div>
+            <div class="ui fluid large teal submit button" type="submit" id="write_bbs">
+                <input class="submitBtn" type="submit" value="후기 수정">
+            </div>
         </form>
     </div>
 </div>

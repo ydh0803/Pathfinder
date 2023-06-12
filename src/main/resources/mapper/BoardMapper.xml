@@ -2,34 +2,34 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <!-- JAVA와 연결할 Mapper 파일 설정 -->
-<mapper namespace="com.example.pathfinder.mapper.IBoardMapper">
+<mapper namespace="com.example.pathfinder.Mapper.IBoardMapper">
     <insert id="Upload" parameterType="BoardDTO">
-        <selectKey keyProperty="board_no" resultType="int" order="BEFORE">
+        <selectKey keyProperty="boardNo" resultType="int" order="BEFORE">
             SELECT IFNULL(MAX(BOARD_NO+1),1) FROM REVIEWBOARD
         </selectKey>
-        INSERT INTO REVIEWBOARD(BOARD_NO, COURSENAME, TITLE, CONTENTS, IMGLINK, USER_NO, REGDATE)
-        VALUES(#{board_no}, #{coursename}, #{title}, #{contents}, #{imglink}, #{user_no}, #{regdate})
+        INSERT INTO REVIEWBOARD(BOARD_NO, TITLE, CONTENTS, IMGLINK, USER_NO, REGDATE)
+        VALUES(#{boardNo}, #{title}, #{contents}, #{imglink}, #{userNo}, #{regdate})
     </insert>
 
     <!-- 게시판 상세보기 쿼리 -->
     <select id="getBoardInfo" resultType="BoardDTO">
-        SELECT B.BOARD_NO, B.COURSENAME, B.TITLE, B.CONTENTS, B.IMGLINK, U.USER_NAME, B.REGDATE, B.USER_NO
+        SELECT B.BOARD_NO, B.TITLE, B.CONTENTS, B.IMGLINK, U.USER_NAME, B.REGDATE, B.USER_NO
         FROM REVIEWBOARD B, USER_INFO U
         WHERE B.USER_NO = U.USER_NO
-          AND B.BOARD_NO = #{board_no}
+          AND B.BOARD_NO = #{boardNo}
     </select>
     <!-- 게시판 글 수정 쿼리-->
     <update id="boardUpdate" parameterType="BoardDTO">
-        update REVIEWBOARD set TITLE=#{title}, CONTENTS=#{contents}, IMGLINK=#{imglink}, REGDATE=#{regdate} where BOARD_NO=#{board_no}
+        update REVIEWBOARD set TITLE=#{title}, CONTENTS=#{contents}, IMGLINK=#{imglink}, REGDATE=#{regdate} where BOARD_NO=#{boardNo}
     </update>
 
     <!-- 댓글 수정 쿼리-->
     <update id="commentUpdate" parameterType="CommentDTO">
-        update COMMENT set COMMENT_TEXT=#{comment_text}, REGDATE=#{regdate} where COMMENT_NO=#{comment_no}
+        update COMMENT set COMMENT_TEXT=#{commentText}, REGDATE=#{regdate} where COMMENT_NO=#{commentNo}
     </update>
     <!-- 게시판 글 삭제 쿼리-->
     <delete id="boardDelete" parameterType="BoardDTO">
-        delete from REVIEWBOARD WHERE BOARD_NO=#{board_no}
+        delete from REVIEWBOARD WHERE BOARD_NO=#{boardNo}
     </delete>
 
     <!-- 페이징처리 -->
@@ -37,14 +37,11 @@
         select count(*) from REVIEWBOARD
     </select>
 
-    <select id="totalCountByCourse" parameterType="BoardDTO" resultType="int">
-        select count(*) from REVIEWBOARD WHERE COURSENAME=#{coursename}
-    </select>
 
     <select id="getListPaging" resultType="BoardDTO">
 
         select * from (
-                          select R.BOARD_NO, R.COURSENAME, R.TITLE, R.CONTENTS, R.REGDATE, U.USER_NAME, R.IMGLINK
+                          select R.BOARD_NO, R.TITLE, R.CONTENTS, R.REGDATE, U.USER_NAME, R.IMGLINK
                           from REVIEWBOARD R, USER_INFO U
                           WHERE U.USER_NO = R.USER_NO
                           order by BOARD_NO asc) as T1
@@ -52,34 +49,34 @@
 
     </select>
 
-    <select id="getListPagingByCourse" parameterType="java.util.HashMap" resultType="BoardDTO">
+<!--    <select id="getListPagingByCourse" parameterType="java.util.HashMap" resultType="BoardDTO">-->
 
-        select * from (
-                          select R.BOARD_NO, R.COURSENAME, R.TITLE, R.CONTENTS, R.REGDATE, U.USER_NAME, R.IMGLINK
-                          from REVIEWBOARD R, USER_INFO U
-                          WHERE U.USER_NO = R.USER_NO and R.COURSENAME=#{coursename}
-                          order by BOARD_NO asc) as T1
-        limit #{skip},#{amount}
+<!--        select * from (-->
+<!--                          select R.BOARD_NO, R.TITLE, R.CONTENTS, R.REGDATE, U.USER_NAME, R.IMGLINK-->
+<!--                          from REVIEWBOARD R, USER_INFO U-->
+<!--                          WHERE U.UserNo = R.UserNo-->
+<!--                          order by BOARD_NO asc) as T1-->
+<!--        limit #{skip},#{amount}-->
 
-    </select>
+<!--    </select>-->
 
     <insert id="insertComment" parameterType="CommentDTO">
-        <selectKey keyProperty="comment_no" resultType="int" order="BEFORE">
+        <selectKey keyProperty="commentNo" resultType="int" order="BEFORE">
             SELECT IFNULL(MAX(COMMENT.COMMENT_NO+1),1) FROM COMMENT
         </selectKey>
-        insert into COMMENT(COMMENT_NO, COMMENT_TEXT, REGDATE, BOARD_NO, USER_NO) values (#{comment_no}, #{comment_text}, #{regdate}, #{board_no}, #{user_no})
+        insert into COMMENT(COMMENT_NO, COMMENT_TEXT, REGDATE, BOARD_NO, USER_NO) values (#{commentNo}, #{commentText}, #{regdate}, #{boardNo}, #{userNo})
     </insert>
 
     <select id="getComment" parameterType="CommentDTO" resultType="CommentDTO">
         select C.COMMENT_NO, C.BOARD_NO, C.cOMMENT_TEXT, C.REGDATE, C.USER_NO, U.USER_NAME
         from COMMENT C, USER_INFO U
-        WHERE C.BOARD_NO=#{board_no} and C.USER_NO = U.USER_NO
+        WHERE C.BOARD_NO=#{boardNo} and C.USER_NO = U.USER_NO
         order by C.COMMENT_NO asc
     </select>
     <select id="getRepCnt" parameterType="CommentDTO" resultType="int">
-        select count(*) from COMMENT where BOARD_NO=#{board_no}
+        select count(*) from COMMENT where BOARD_NO=#{boardNo}
     </select>
     <delete id="repDelete" parameterType="CommentDTO">
-        delete from COMMENT where COMMENT_NO=#{comment_no}
+        delete from COMMENT where COMMENT_NO=#{commentNo}
     </delete>
 </mapper>

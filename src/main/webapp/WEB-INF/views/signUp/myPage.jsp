@@ -102,6 +102,12 @@
             location.href="/deleteUser?userNo=<%=uDTO.getUserNo()%>"
         }
     }
+
+    function chgName() {
+        window.open('/user/chgName','이름변경','width=800px,height=400px')
+    }
+
+
 </script>
 </head>
 <body>
@@ -111,10 +117,11 @@
     <h2 class="login-header">마이페이지</h2>
 
     <form class="login-container">
-        <p> 닉네임 : <%=uDTO.getUserName()%></p>
+        <p> 닉네임 : <%=uDTO.getUserName()%></p><a class="btn" onclick="chgName()"><strong style="color:blue">변경</strong></a>
         <p> 이메일 : <%=uDTO.getUserMailid()%>@<%=uDTO.getUserMaildomain()%></p>
 
-        <button class="menu" onclick="location.href='/userEdit'">수정</button>
+        <a onclick="window.open('/pwCheck','비밀번호 변경','width=600 height=400')">비밀번호 변경</a>
+<%--        <button class="menu" onclick="location.href='/userEdit'">수정</button>--%>
         <button class="menu" id="menuBtn" onclick="location.href='/logOut'">로그아웃</button>
         <button onclick="deleteUser()">탈퇴</button>
 

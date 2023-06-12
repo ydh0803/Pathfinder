@@ -11,19 +11,19 @@
         where USER_ID = #{userid} and USER_PW = #{userpwd}
     </select>
     <select id="findId" parameterType="UserDTO" resultType="UserDTO">
-        select USER_ID from USER_INFO where USER_MAILID = #{user_mailid} and USER_MAILDOMAIN = #{user_maildomain}
+        select USER_ID from USER_INFO where USER_MAILID = #{userMailid} and USER_MAILDOMAIN = #{userMaildomain}
     </select>
     <select id="findIdCheck" resultType="int" parameterType="UserDTO">
-        select count(*) from USER_INFO where USER_MAILID = #{user_mailid} and USER_MAILDOMAIN = #{user_maildomain}
+        select count(*) from USER_INFO where USER_MAILID = #{userMailid} and USER_MAILDOMAIN = #{userMaildomain}
     </select>
     <select id="findPwCheck" resultType="int" parameterType="UserDTO">
-        select count(*) from USER_INFO where USER_MAILID = #{user_mailid} and USER_MAILDOMAIN = #{user_maildomain} and USER_ID = #{user_id}
+        select count(*) from USER_INFO where USER_MAILID = #{userMailid} and USER_MAILDOMAIN = #{userMaildomain} and USER_ID = #{userId}
     </select>
     <update id="resetPw" parameterType="UserDTO">
-        update USER_INFO set USER_PW = #{user_pw} where USER_MAILID = #{user_mailid} and USER_MAILDOMAIN = #{user_maildomain} and USER_ID = #{user_id}
+        update USER_INFO set USER_PW = #{userPw} where USER_MAILID = #{userMailid} and USER_MAILDOMAIN = #{userMaildomain} and USER_ID = #{userId}
     </update>
     <delete id="deleteUser" parameterType="UserDTO">
-        delete from USER_INFO where USER_NO =#{user_no}
+        delete from USER_INFO where UserNo =#{userNo}
     </delete>
 
 </mapper>

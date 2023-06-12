@@ -2,15 +2,43 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.pathfinder.Mapper.IUserMapper">
     <select id="idCheck" resultType="UserDTO" parameterType="UserDTO">
-        select USER_ID from USER_INFO where USER_ID = #{user_id}
+        select USER_ID from USER_INFO where USER_ID = #{userId}
     </select>
 
     <insert id="saveUser" parameterType="UserDTO">
-        <selectKey keyProperty="user_no" resultType="int" order="BEFORE">
+        <selectKey keyProperty="userNo" resultType="int" order="BEFORE">
             SELECT IFNULL(MAX(USER_NO+1),1) FROM USER_INFO
         </selectKey>
         INSERT INTO USER_INFO(USER_NO, USER_ID, USER_PW, USER_NAME, USER_MAILID, USER_MAILDOMAIN, AUTH)
-        VALUES(#{user_no}, #{user_id}, #{user_pw}, #{user_name}, #{user_mailid}, #{user_maildomain}, #{auth})
+        VALUES(#{userNo}, #{userId}, #{userPw}, #{userName}, #{userMailid}, #{userMaildomain}, #{auth})
     </insert>
+
+    <!--닉네임 중복체크-->
+    <select id="nameCheck" parameterType="UserDTO" resultType="UserDTO">
+        SELECT USER_NAME FROM USER_INFO WHERE USER_NAME=#{userName}
+
+    </select>
+
+    <!--메일 중복체크-->
+    <select id="mailCheck" parameterType="UserDTO" resultType="UserDTO">
+        SELECT USER_MAILID and USER_MAILDOMAIN FROM USER_INFO WHERE USER_MAILID=#{userMailid} and USER_MAILDOMAIN=#{userMaildomain}
+    </select>
+
+    <!-- 회원 비밀번호 체크 -->
+    <select id="pwCheck" parameterType="UserDTO" resultType="int">
+        select count(USER_NO) from USER_INFO where USER_PW=#{userPw} and USER_NO=#{userNo}
+    </select>
+
+    <!-- 회원 닉네임 변경 -->
+    <update id="chgName" parameterType="UserDTO">
+        update USER_INFO set USER_Name=#{userName} where USER_NO=#{userNo}
+    </update>
+
+    <!-- 회원 비밀번호 변경 -->
+    <update id="chgPw" parameterType="UserDTO">
+        update USER_INFO set USER_PW=#{userPw} where USER_NO=#{userNo}
+    </update>
+
+
 
 </mapper>

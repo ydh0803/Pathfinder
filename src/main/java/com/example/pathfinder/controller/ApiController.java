@@ -143,12 +143,12 @@ public class ApiController {
     public String SearchDetail(HttpServletRequest request, Model model) throws IOException, ParseException {
         log.info(this.getClass().getName() + ".SearchDetail start");
         String contentid = CmmUtil.nvl(request.getParameter("contentid"));
+        String contentypeid = "12";
         String title = CmmUtil.nvl(request.getParameter("title"));
         String tel = CmmUtil.nvl(request.getParameter("tel"));
         String firstimage = CmmUtil.nvl(request.getParameter("firstimage"));
         String addr1 = CmmUtil.nvl(request.getParameter("addr1"));
-        String addr2 = String.valueOf(ApiSearchDetail.main("addr2"));
-        String api = String.valueOf(ApiSearchDetail.main(contentid));
+        String api = String.valueOf(ApiSearchDetail.main(contentid, contentypeid));
         log.info(contentid);
         log.info(title);
 
@@ -185,7 +185,6 @@ public class ApiController {
         rDTO.setTel(tel);
         rDTO.setFirstimage(firstimage);
         rDTO.setAddr1(addr1);
-        rDTO.setAddr2(addr2);
 
 
         model.addAttribute("Detail", rDTO);
@@ -268,6 +267,83 @@ public class ApiController {
 
             return list;
         }
+
+    @GetMapping(value = "/tour/gpsDetail")
+    public String gpsDetail(HttpServletRequest request, Model model) throws IOException, ParseException {
+        log.info(this.getClass().getName() + ".SearchDetail start");
+        String contentid = CmmUtil.nvl(request.getParameter("contentid"));
+        String contenttypeid = CmmUtil.nvl(request.getParameter("contenttypeid"));
+        String title = CmmUtil.nvl(request.getParameter("title"));
+        String tel = CmmUtil.nvl(request.getParameter("tel"));
+        String firstimage = CmmUtil.nvl(request.getParameter("firstimage"));
+        String addr1 = CmmUtil.nvl(request.getParameter("addr1"));
+        String api = String.valueOf(ApiSearchDetail.main(contentid, contenttypeid));
+        log.info(contentid);
+        log.info(title);
+
+        JSONParser jsonParser = new JSONParser();
+        JSONObject obj = (JSONObject) jsonParser.parse(api);
+        JSONObject response = (JSONObject) obj.get("response");
+        JSONObject body = (JSONObject) response.get("body");
+        JSONObject items = (JSONObject) body.get("items");
+        JSONArray item = (JSONArray) items.get("item");
+        log.info(String.valueOf(item));
+
+        DetailDTO rDTO = null;
+        JSONObject array = null;
+        for (Object arr : item) {
+            array = (JSONObject) arr;
+            rDTO = new DetailDTO();
+            // rDTO를 사용하는 코드
+        }
+        rDTO.setChkpetleports((String) array.get("chkpetleports"));
+        rDTO.setChkpetshopping((String) array.get("chkpetshopping"));
+        rDTO.setChkpetculture((String) array.get("chkpetculture"));
+        rDTO.setChkcreditcardfood((String) array.get("chkcreditcardfood"));
+        rDTO.setChkcreditcardshopping((String) array.get("chkcreditcardshopping"));
+        rDTO.setChkcreditcardculture((String) array.get("chkcreditcardculture"));
+        rDTO.setChkcreditcardleports((String) array.get("chkcreditcardleports"));
+        rDTO.setAccomcountshopping((String) array.get("accomcountshopping"));
+        rDTO.setAccomcountleports((String) array.get("accomcountleports"));
+        rDTO.setAccomcountlodging((String) array.get("accomcountlodging"));
+        rDTO.setAccomcountculture((String) array.get("accomcountculutre"));
+        rDTO.setChkbabycarriageculture((String) array.get("chkbabycarriageculture"));
+        rDTO.setChkbabycarriageleports((String) array.get("chkbabycarriageleports"));
+        rDTO.setChkbabycarriageshopping((String) array.get("chkbabycarriageshopping"));
+        rDTO.setParkingfood((String) array.get("parkingfood"));
+        rDTO.setParkingculture((String) array.get("parkingculture"));
+        rDTO.setParkingshopping((String) array.get("parkingshopping"));
+        rDTO.setParkingleports((String) array.get("parkingleports"));
+        rDTO.setParkinglodging((String) array.get("parkinglodging"));
+        rDTO.setParkingfee((String) array.get("parkingfee"));
+        rDTO.setParkingfeeleports((String) array.get("parkingfeeleports"));
+        rDTO.setInfocenterfood((String) array.get("infocenterfood"));
+        rDTO.setInfocentershopping((String) array.get("infocentershopping"));
+        rDTO.setInfocenterculture((String) array.get("infocenterculture"));
+        rDTO.setInfocenterleports((String) array.get("infocenterleports"));
+        rDTO.setInfocenterlodging((String) array.get("infocenterlodging"));
+        rDTO.setUsetimeculture((String) array.get("usetimeculture"));
+        rDTO.setUsetimeleports((String) array.get("usetimeleports"));
+        rDTO.setExpagerangeleports((String) array.get("expagerangeleports"));
+        rDTO.setOpendatefood((String) array.get("opendatefood"));
+        rDTO.setOpendateshopping((String) array.get("opendateshopping"));
+        rDTO.setRestdatefood((String) array.get("restdatefood"));
+        rDTO.setRestdateshopping((String) array.get("restdateshopping"));
+        rDTO.setRestdateleports((String) array.get("restdateleports"));
+        rDTO.setTitle(title);
+        rDTO.setTel(tel);
+        rDTO.setFirstimage(firstimage);
+        rDTO.setAddr1(addr1);
+
+
+        model.addAttribute("Detail", rDTO);
+
+
+        log.info("dddd");
+        return "/tour/gpsDetail";
     }
+    }
+
+
 
 

@@ -289,7 +289,8 @@
                     dataType: "JSON",
                     success: function (data) {
                         $.each(data, function (index, val){
-                            $('#gpsList').append('<img src="' +val.firstimage+'" style="width:150px;height:150px;"> <a href="/tour/SearchDetail?contentid='+val.contentid+'"> '+val.title+' <a/>')
+                            $('#gpsList').append('<img src="' +val.firstimage+'" style="width:150px;height:150px;">' +
+                                '<a href="/tour/gpsDetail?contentid='+val.contentid+'&title='+val.title+'&addr1='+val.addr1+'&tel='+val.tel+'&firstimage='+val.firstimage+'&contenttypeid='+ContentTypeId+'"> '+val.title+' <a/>' + '</br>')
 
 
             })}})})}
@@ -299,7 +300,7 @@
         </script>
 
 
-        <input type="button" class="menu" id="menuBtn" onclick='executeCode()' value="버튼">
+        <input type="button" class="menu" id="menuBtn" onclick='executeCode()' value="목록 보기">
 
 </div>
     </div>

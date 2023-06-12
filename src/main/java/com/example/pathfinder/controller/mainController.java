@@ -15,5 +15,10 @@ public class mainController {
 
         return "index";
     }
+    @RequestMapping("/index")
+    public String index() throws IOException {
+
+        return "index";
+    }
 }
 

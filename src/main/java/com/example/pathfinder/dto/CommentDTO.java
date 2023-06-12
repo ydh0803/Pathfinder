@@ -6,11 +6,11 @@ import lombok.Setter;
 @Getter
 @Setter
 public class CommentDTO {
-    private int comment_no;
-    private String comment_text;
+    private int commentNo;
+    private String commentText;
     private String regdate;
-    private int user_no;
-    private int board_no;
-    private String user_name;
+    private int userNo;
+    private int boardNo;
+    private String userName;
     private int repCnt;
 }

@@ -21,6 +21,15 @@ public interface IUserService {
 
     List<NoticeDTO> getNoticeList();
 
+    //회원 비밀번호 체크
+    int pwCheck(UserDTO pDTO);
+
+    //회원 비밀번호 변경
+    int chgPw(UserDTO pDTO) throws Exception;
+
+    //회원 비밀번호 변경
+    int chgName(UserDTO pDTO) throws Exception;
+
 
 
 }

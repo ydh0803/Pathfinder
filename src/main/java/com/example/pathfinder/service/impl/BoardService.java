@@ -4,19 +4,18 @@ import com.example.pathfinder.Mapper.IBoardMapper;
 import com.example.pathfinder.dto.BoardDTO;
 import com.example.pathfinder.dto.CommentDTO;
 import com.example.pathfinder.dto.Criteria;
+import com.example.pathfinder.service.IBoardService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 @Slf4j
 @Service
-public class BoardService {
-
+public class BoardService implements IBoardService {
     SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
     Date time = new Date();
     String localTime = format.format(time);
@@ -81,7 +80,6 @@ public class BoardService {
         cri.setPageNum(pNo);
         hMap.put("skip", cri.getSkip());
         hMap.put("amount", cri.getAmount());
-        hMap.put("coursename", pDTO.getCoursename());
 
         return iBoardMapper.getListPagingByCourse(hMap);
     }
@@ -113,5 +111,28 @@ public class BoardService {
         pDTO.setRegdate(localTime);
         iBoardMapper.commentUpdate(pDTO);
     }
+
+//    @Autowired
+//    private final IBoardMapper boardMapper;
+//
+//    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+//    Date time = new Date();
+//    String localTime = format.format(time);
+//
+//    @Autowired
+//    public BoardService(IBoardMapper boardMapper) {
+//
+//        this.boardMapper = boardMapper;
+//    }
+//
+//    @Transactional
+//    @Override
+//    public void WriteReview(BoardDTO boardDTO) throws Exception {
+//        log.info(this.getClass().getName() + "start!");
+//
+//        boardMapper.writeBoard(boardDTO);
+//
+//        log.info((this.getClass().getName() + "end!"));
+//    }
 
 }
