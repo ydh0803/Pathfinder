@@ -76,7 +76,7 @@
 
     <!-- 회원 삭제 쿼리 -->
     <delete id="deleteUser" parameterType="UserDTO">
-        delete from USER_INFO where USER_NO=#{useNno}
+        delete from USER_INFO where USER_NO=#{userNo}
     </delete>
 
 

@@ -342,7 +342,55 @@ public class ApiController {
         log.info("dddd");
         return "/tour/gpsDetail";
     }
-    }
+
+//    @GetMapping("getWeather")
+//    public String getWeather(HttpServletRequest request, Model model) throws IOException, ParseException {
+//
+//        log.info(this.getClass().getName() + ".Weather start");
+//
+//        String day = CmmUtil.nvl(request.getParameter("day"));
+//        String time = CmmUtil.nvl(request.getParameter("time"));
+//        String gridX = CmmUtil.nvl(request.getParameter("lon"));
+//        String gridY = CmmUtil.nvl(request.getParameter("lat"));
+//
+//        String api = String.valueOf(ApiWeather.main(day, time, gridX, gridY));
+//
+//        JSONParser jsonParser = new JSONParser();
+//        JSONObject obj = (JSONObject) jsonParser.parse(api);
+//        JSONObject response = (JSONObject) obj.get("response");
+//        JSONObject body = (JSONObject) response.get("body");
+//        JSONObject items = (JSONObject) body.get("items");
+//        JSONArray item = (JSONArray) items.get("item");
+//        log.info(String.valueOf(item));
+//
+//        List<WeatherDTO> list = new ArrayList<WeatherDTO>();
+//        for(Object arr : item){
+//            JSONObject array = (JSONObject) arr;
+//            WeatherDTO rDTO = new WeatherDTO();
+//            rDTO.setLat((String) array.get("lat"));
+//            rDTO.setLon((String) array.get("lon"));
+//            rDTO.setTitle((String) array.get("title"));
+//            rDTO.setContenttypeid((String) array.get("contenttypeid"));
+//            rDTO.setFirstimage2((String) array.get("firstimage2"));
+//            rDTO.setFirstimage((String) array.get("firstimage"));
+//            rDTO.setSigungucode((String) array.get("sigungucode"));
+//            rDTO.setTel((String) array.get("tel"));
+//            rDTO.setAddr1((String) array.get("addr1"));
+//            rDTO.setAddr2((String) array.get("addr2"));
+//
+//            list.add(rDTO);
+//
+//        }
+//
+//        log.info(list.toString());
+//        model.addAttribute("list", list);
+//
+//
+//        return "/tour/Search";
+//    }
+
+
+}
 
 
 

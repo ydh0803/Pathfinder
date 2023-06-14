@@ -14,8 +14,8 @@ import java.util.Map;
 @Service
 @Repository
 public class LoginService implements ILoginService {
-   /* @Autowired
-    private MailService mailService;*/
+   @Autowired
+    private MailService mailService;
 
     @Autowired
     private ILoginMapper userMapper;
@@ -44,21 +44,17 @@ public class LoginService implements ILoginService {
         return userMapper.findPwCheck(pDTO);
     }
 
+
     @Override
     public void resetPw(UserDTO pDTO) throws Exception {
-
-    }
-
-    /*@Override
-    public void resetPw(UserDTO pDTO) throws Exception {
-        String user_mailid = pDTO.getUser_mailid();
-        String user_maildomain = pDTO.getUser_maildomain();
-        String userEmail = user_mailid + "@" + user_maildomain;
+        String userMailid = pDTO.getUserMailid();
+        String userMaildomain = pDTO.getUserMaildomain();
+        String userEmail = userMailid + "@" + userMaildomain;
         String userPw = mailService.sendPassword(userEmail);
-        pDTO.setUser_pw(userPw);
+        pDTO.setUserPw(userPw);
         userMapper.resetPw(pDTO);
 
-    }*/
+    }
 
     @Override
     public void deleteUser(UserDTO pDTO) throws Exception {

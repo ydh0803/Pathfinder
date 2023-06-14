@@ -16,5 +16,7 @@ public interface ILoginMapper {
 
     int findPwCheck(UserDTO pDTO)throws Exception;
 
+    void resetPw(UserDTO pDTO) throws Exception;
+
     int deleteUser(UserDTO pDTO) throws Exception;
 }

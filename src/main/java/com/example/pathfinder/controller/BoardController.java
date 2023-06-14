@@ -3,17 +3,17 @@ package com.example.pathfinder.controller;
 import com.example.pathfinder.dto.*;
 import com.example.pathfinder.service.impl.BoardService;
 import com.example.pathfinder.util.CmmUtil;
+import com.example.pathfinder.service.impl.S3Service;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -26,10 +26,12 @@ public class BoardController {
 
 
     private final BoardService boardService;
+    private final S3Service s3Service;
 
 
-    public BoardController(BoardService boardService) {
+    public BoardController(BoardService boardService, S3Service s3service) {
         this.boardService = boardService;
+        this.s3Service = s3service;
     }
 
         @GetMapping("/review/reviewWrite")
@@ -40,29 +42,29 @@ public class BoardController {
 
 
     @PostMapping("/upload")
-    public String execWrite(MultipartHttpServletRequest request, Model model) throws IOException {
+    public String execWrite(MultipartHttpServletRequest request, Model model) throws Exception {
         log.info(this.getClass().getName() + ".execWrite start");
         String title = CmmUtil.nvl(request.getParameter("title"));
         String contents = CmmUtil.nvl(request.getParameter("contents"));
         log.info(title);
-//        if(!Objects.requireNonNull(request.getFile("file")).isEmpty()) {
-//            MultipartFile file = request.getFile("file");
-////            String imgPath = s3Service.upload(file);
-////            String imglink = "https://d1y3hanryj5vy8.cloudfront.net/" + imgPath;
-//            Integer userNo = Integer.parseInt(request.getParameter("userNo"));
-//            log.info(title);
-//            log.info(contents);
-////            log.info(imglink);
-//            log.info(String.valueOf(userNo));
-//            BoardDTO pDTO = new BoardDTO();
-//            pDTO.setTitle(title);
-//            pDTO.setContents(contents);
-//            pDTO.setUserNo(String.valueOf(userNo));
-////            pDTO.setImglink(imglink);
-//            boardService.Upload(pDTO);
-//            String msg = "글이 작성되었습니다.";
-//            model.addAttribute("msg", msg);
-//        }else{
+        if(!Objects.requireNonNull(request.getFile("file")).isEmpty()) {
+            MultipartFile file = request.getFile("file");
+            String imgPath = s3Service.upload(file);
+            String imglink = "https://pathfinders3.s3.ap-northeast-2.amazonaws.com/" + imgPath;
+            Integer userNo = Integer.parseInt(request.getParameter("userNo"));
+            log.info(title);
+            log.info(contents);
+            log.info(imglink);
+            log.info(String.valueOf(userNo));
+            BoardDTO pDTO = new BoardDTO();
+            pDTO.setTitle(title);
+            pDTO.setContents(contents);
+            pDTO.setUserNo(String.valueOf(userNo));
+            pDTO.setImglink(imglink);
+            boardService.Upload(pDTO);
+            String msg = "글이 작성되었습니다.";
+            model.addAttribute("msg", msg);
+        }else{
             int userNo = Integer.parseInt(request.getParameter("userNo"));
             BoardDTO pDTO = new BoardDTO();
             pDTO.setTitle(title);
@@ -72,7 +74,7 @@ public class BoardController {
             String msg = "글이 작성되었습니다.";
             model.addAttribute("msg", msg);
 
-//        }
+        }
         return "/review/MsgToList";
 
     }
@@ -197,20 +199,20 @@ public class BoardController {
         String title = CmmUtil.nvl(request.getParameter("title"));
         String contents = CmmUtil.nvl(request.getParameter("contents"));
         int boardNo = Integer.parseInt(CmmUtil.nvl(request.getParameter("nSeq")));
-        String img = CmmUtil.nvl(request.getParameter("img"));
+        String imgLink = CmmUtil.nvl(request.getParameter("imglink"));
         if(!Objects.requireNonNull(request.getFile("file")).isEmpty()) {
-//            s3Service.deleteS3(imgLink);
+            s3Service.deleteS3(imgLink);
             MultipartFile file = request.getFile("file");
-//            String imgPath = s3Service.upload(file);
-//            String imglink = "https://d1y3hanryj5vy8.cloudfront.net/" + imgPath;
+            String imgPath = s3Service.upload(file);
+            String imglink = "https://pathfinders3.s3.ap-northeast-2.amazonaws.com/" + imgPath;
             log.info(title);
             log.info(contents);
-//            log.info(imglink);
+            log.info(imglink);
             BoardDTO pDTO = new BoardDTO();
             pDTO.setTitle(title);
             pDTO.setContents(contents);
             pDTO.setBoardNo(boardNo);
-//            pDTO.setImglink(imglink);
+            pDTO.setImglink(imglink);
             boardService.boardUpdate(pDTO);
             String msg = "글이 수정되었습니다.";
             model.addAttribute("msg", msg);
@@ -219,7 +221,7 @@ public class BoardController {
             pDTO.setTitle(title);
             pDTO.setContents(contents);
             pDTO.setBoardNo(boardNo);
-//            pDTO.setImglink(imglink);
+            pDTO.setImglink(imgLink);
             boardService.boardUpdate(pDTO);
             String msg = "글이 수정되었습니다.";
             model.addAttribute("msg", msg);
@@ -234,19 +236,19 @@ public class BoardController {
         BoardDTO pDTO = new BoardDTO();
         pDTO.setBoardNo(boardNo);
         BoardDTO rDTO = boardService.getBoardInfo(pDTO);
-//        if (rDTO.getImglink() != null) {
-//            String[] fileName = rDTO.getImglink().split("/");
-//            s3Service.deleteS3(fileName[3]);
-//            boardService.boardDelete(pDTO);
-//            String msg = "게시글이 삭제 되었습니다.";
-//            model.addAttribute("msg",msg);
-//            return "/review/MsgToList";
-//        }else {
+        if (rDTO.getImglink() != null) {
+            String[] fileName = rDTO.getImglink().split("/");
+            s3Service.deleteS3(fileName[3]);
             boardService.boardDelete(pDTO);
             String msg = "게시글이 삭제 되었습니다.";
             model.addAttribute("msg",msg);
             return "/review/MsgToList";
-//        }
+        }else {
+            boardService.boardDelete(pDTO);
+            String msg = "게시글이 삭제 되었습니다.";
+            model.addAttribute("msg",msg);
+            return "/review/MsgToList";
+        }
     }
 
     @GetMapping("/review/reviewList")
@@ -264,6 +266,8 @@ public class BoardController {
             PageMakeDTO pageMake = new PageMakeDTO(cri, total);
 
             model.addAttribute("pageMaker", pageMake);
+
+            log.info("ggg" + model);
             return "/review/ReviewList";
         }
         log.info("boardListGET");

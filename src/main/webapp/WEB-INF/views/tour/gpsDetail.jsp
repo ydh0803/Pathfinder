@@ -308,6 +308,6 @@
 
 
 
-    </div>
+    </div><a href="/index">메인 화면으로</a>
 </div>
 </body>

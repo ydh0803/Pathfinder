@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.*;
+import javax.mail.MessagingException;
 
 @Slf4j
 @Controller
@@ -112,6 +113,7 @@ public class LoginController {
         log.info("jsonArrCheck: {}", jsonArr);
         return jsonArr;
     }
+
 
     @GetMapping(value = "/findPw")
     public String findPwView() throws Exception{

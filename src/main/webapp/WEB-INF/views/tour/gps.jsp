@@ -259,18 +259,6 @@
         <div id="gpsList" name="gpsList">
 
         </div>
-<%--    <%--%>
-<%--        for (int i = 0; i < sList.size(); i++) {--%>
-<%--            ScanDTO sDTO = sList.get(i);--%>
-
-
-<%--    %>--%>
-<%--    <img src="<%=rDTO.getFirstimage2()%>" style="width:150px;height:150px;"/>--%>
-<%--    <a href="/tour/SearchDetail?title=<%=rDTO.getTitle()%>"><%=rDTO.getTitle()%></a>--%>
-<%--    <a href="/tour/SearchDetail?contentid=<%=rDTO.getContentid()%>"><%=rDTO.getTitle()%></a>--%>
-<%--    &lt;%&ndash;        <a href="/tour/SearchDetail?contentId=<%rDTO.getContentId();%>&contentTypeId=<%rDTO.getContentTypeId();%>"><%=rDTO.getTitle()%></a>&ndash;%&gt;--%>
-
-<%--    <%}%>--%>
 
         <script>
 
@@ -302,7 +290,7 @@
 
         <input type="button" class="menu" id="menuBtn" onclick='executeCode()' value="목록 보기">
 
-</div>
+</div><a href="/index">메인 화면으로</a>
     </div>
 </div>
 

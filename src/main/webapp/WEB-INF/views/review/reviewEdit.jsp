@@ -37,20 +37,20 @@
             }
         }
 
-        // function readURL(input) {
-        //     if (input.files && input.files[0]) {
-        //         var reader = new FileReader();
-        //         reader.onload = function(e) {
-        //             document.getElementById('preview').src = e.target.result;
-        //             document.getElementById('preview').style.textAlign="left";
-        //             document.getElementById('preview').style.width="450px";
-        //             document.getElementById('preview').style.height="350px";
-        //         };
-        //         reader.readAsDataURL(input.files[0]);
-        //     } else {
-        //         document.getElementById('preview').src = "";
-        //     }
-        // }
+        function readURL(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('preview').src = e.target.result;
+                    document.getElementById('preview').style.textAlign="left";
+                    document.getElementById('preview').style.width="450px";
+                    document.getElementById('preview').style.height="350px";
+                };
+                reader.readAsDataURL(input.files[0]);
+            } else {
+                document.getElementById('preview').src = "";
+            }
+        }
 
         //작성자 여부체크
         function doOnload(){
@@ -140,8 +140,8 @@
         .img {
             position: absolute;
             width: 17px;
-            top: 10px;
-            right: 12px;
+            top: 0px;
+            right: 0px;
             margin: 0;
         }
 

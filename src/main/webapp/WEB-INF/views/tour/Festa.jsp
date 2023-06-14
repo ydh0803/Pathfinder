@@ -186,6 +186,8 @@
                     };
                 let map2 = new kakao.maps.Map(mapContainer2, mapOption2);
 
+                viewWeather(x, y);
+
                 markerSet();
 
                 function markerSet(){
@@ -212,11 +214,10 @@
                                 marker.setMap(map2);
 
                                 let iwContent = '<div style="padding:5px;">' +
-                                        '<p> 축제 : '+val.title +'</p>'+
-                                        '<p> 주소 : '+ val.addr1 +'</p>' +
-                                        '<p> 기간 : '+val.eventstartdate + '~' + val.eventenddate +'</p>' +
-
-                                        '<p> 전화번호 : '+ val.tel +'</p>'
+                                        '<p> 축제명<br>'+val.title +'</p>'+
+                                        '<p> 축제주소<br>'+ val.addr1 +'</p>' +
+                                        '<p> 축제기간<br>'+val.eventstartdate + '~' + val.eventenddate +'</p>' +
+                                        '<p> 전화번호<br>'+ val.tel +'</p>'
                                         '</div>', // 인포윈도우에 표출될 내용으로 HTML 문자열이나 document element가 가능합니다
                                     iwPosition = new kakao.maps.LatLng(val.mapy, val.mapx); //인포윈도우 표시 위치입니다
 
@@ -270,39 +271,65 @@
     </select>
         <button type="submit" id="find" onclick="getLocation()">찾기</button>
     </div>
+        <div>
+            <span id="currentTemp" name="currentTemp"></span>
+            <div id="dailyWeather">
+
+
+            </div>
+        </div>
+
         <script>
 
-            function executeCode() {
-                <% if (rList != null) {
-                    FestaDTO rDTO=null;
-                    for (int i = 0; i < rList.size(); i++) {
-                    rDTO = rList.get(i);
-                }%>
-                // 이미지 생성
-                var image = document.createElement("img");
-                image.src = "<%=rDTO.getFirstimage2()%>";
-                image.style.width = "150px";
-                image.style.height = "150px";
-                document.body.appendChild(image);
+            function viewWeather(x, y) {
+                let lat = y, lon = x;
 
-                // 제목에 대한 링크 생성
-                var titleLink = document.createElement("a");
-                titleLink.href = "/tour/SearchDetail?title=<%=rDTO.getTitle()%>";
-                titleLink.textContent = "<%=rDTO.getTitle()%>";
-                document.body.appendChild(titleLink);
 
-                // contentid에 대한 링크 생성
-                var contentidLink = document.createElement("a");
-                contentidLink.href = "/tour/SearchDetail?contentid=<%=rDTO.getContentid()%>";
-                contentidLink.textContent = "<%=rDTO.getTitle()%>";
-                document.body.appendChild(contentidLink);
+                console.log(lat, lon)
 
-                <% } %>
+                $.ajax({
+                    url: "/weather/getWeather",
+                    data: {
+                        "lon": lon,
+                        "lat": lat
+                    },
+                    type: "get",
+                    dataType: "JSON",
+                    success: function (json) {
+                        console.log("성공")
+                        $('#currentTemp').append("현재 기온" + json.currentTemp)
+
+                        const dailyList = json.dailyList;
+
+                        for (const daily of dailyList) {
+
+                            let day = daily.day;
+                            let dayTemp = daily.dayTemp;
+                            let description = daily.description;
+                            let pop = daily.pop * 100;
+
+                            $('#dailyWeather').append("<div><b>" + day + "</b></div>");
+                            $('#dailyWeather').append("<div><b>평균 기온 : " + dayTemp + "°C</b></div>");
+                            $('#dailyWeather').append("<div><b>날  씨 : " + description + "</b></div>");
+                            $('#dailyWeather').append("<div><b>강수 확률 : " + pop + "%</b></div>");
+                            $('#dailyWeather').append("<div><br></div>");
+
+                        }
+
+
+                    }
+
+                })
+
             }
 
         </script>
-        <button type="button" class="menu" id="menuBtn" onClick="executeCode()" value="버튼">버튼</button>
+<%--        <input type="button" class="menu" onclick='viewWeather()' value="날씨 보기">--%>
     </div>
+
+
+
+<a href="/index">메인 화면으로</a>
 </div>
 </div>
 

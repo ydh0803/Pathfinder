@@ -91,6 +91,22 @@
         .login input[type="button"]:focus {
             border-color: #05a;
         }
+
+        .login input[type="submit"] {
+            background: #28d;
+            border-color: transparent;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        .login input[type="submit"]:hover {
+            background: #17c;
+        }
+
+        /* Buttons' focus effect */
+        .login input[type="submit"]:focus {
+            border-color: #05a;
+        }
     </style>
 
 </head>
@@ -104,9 +120,8 @@
         <p><input type="text" id="userid" name="userid" placeholder="아이디"></p>
         <p><input type="password" id="userpwd" name="userpwd" placeholder="비밀번호"></p>
         <p><input type="submit" value="로그인"><input type="button" onClick="location.href='signUp'" value="회원가입" ></p>
-        <p><input type="button" value="아이디 찾기"><input type="button" value="비밀번호 찾기"></p>
+        <p><input type="button" onclick="window.open('/findIdPw','회원가입페이지','height=600, width=800 location=center')" value="아이디 / 비밀번호 찾기"></p>
 
-        <a onclick="window.open('/findIdPw','회원가입페이지','height=600, width=800 location=center')">아이디&nbsp;|&nbsp;비밀번호찾기</a>
     </form>
 </div>
 </body>

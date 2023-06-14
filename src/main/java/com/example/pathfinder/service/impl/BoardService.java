@@ -74,15 +74,15 @@ public class BoardService implements IBoardService {
         return iBoardMapper.getListPaging(cri);
     }
 
-    public List<BoardDTO> getListPagingByCourse(int pNo, BoardDTO pDTO) {
-        HashMap<String, Object> hMap = new HashMap();
-        Criteria cri = new Criteria();
-        cri.setPageNum(pNo);
-        hMap.put("skip", cri.getSkip());
-        hMap.put("amount", cri.getAmount());
-
-        return iBoardMapper.getListPagingByCourse(hMap);
-    }
+//    public List<BoardDTO> getListPagingByCourse(int pNo, BoardDTO pDTO) {
+//        HashMap<String, Object> hMap = new HashMap();
+//        Criteria cri = new Criteria();
+//        cri.setPageNum(pNo);
+//        hMap.put("skip", cri.getSkip());
+//        hMap.put("amount", cri.getAmount());
+//
+//        return iBoardMapper.getListPagingByCourse(hMap);
+//    }
 
     public int insertComment(CommentDTO pDTO) throws Exception {
         int res = 0;

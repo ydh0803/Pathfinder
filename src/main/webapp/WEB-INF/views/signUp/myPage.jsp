@@ -121,8 +121,7 @@
         <p> 이메일 : <%=uDTO.getUserMailid()%>@<%=uDTO.getUserMaildomain()%></p>
 
         <a onclick="window.open('/pwCheck','비밀번호 변경','width=600 height=400')">비밀번호 변경</a>
-<%--        <button class="menu" onclick="location.href='/userEdit'">수정</button>--%>
-        <button class="menu" id="menuBtn" onclick="location.href='/logOut'">로그아웃</button>
+        <a href="/logOut">로그아웃</a><br/>
         <button onclick="deleteUser()">탈퇴</button>
 
 

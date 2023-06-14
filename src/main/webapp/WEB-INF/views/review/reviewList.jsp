@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page import="com.example.pathfinder.dto.UserDTO" %>
 <%@ page import="com.example.pathfinder.util.CmmUtil" %>
 <%@ page import="com.example.pathfinder.dto.BoardDTO" %>
@@ -74,8 +75,8 @@
         .img {
             position: absolute;
             width: 17px;
-            top: 10px;
-            right: 12px;
+            top: 0px;
+            right: 0px;
             margin: 0;
         }
 
@@ -316,7 +317,7 @@
         </li>
     </div>
 
-
+    <a href="/index">메인 화면으로</a>
 </div>
 
 </body>

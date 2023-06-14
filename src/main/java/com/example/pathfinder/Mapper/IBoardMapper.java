@@ -19,7 +19,7 @@ public interface IBoardMapper {
     /* 게시판 목록(페이징 적용) */
     List<BoardDTO> getListPaging(Criteria cri);
 
-    List<BoardDTO> getListPagingByCourse(HashMap<String, Object> hMap);
+//    List<BoardDTO> getListPagingByCourse(HashMap<String, Object> hMap);
 
     BoardDTO getBoardInfo(BoardDTO pDTO) throws Exception;
 

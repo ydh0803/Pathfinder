@@ -91,32 +91,33 @@
                 return false;
             }
         }
-        // function sendPw(){
-        //     let userMail= document.getElementById("userEmail").value;
-        //     let mail = userMail.split('@')
-        //     console.log(mail)
-        //     let userMailid = mail[0];
-        //     console.log(userMailid)
-        //     let userMaildomain= mail[1];
-        //     console.log(userMaildomain)
-        //     let userId = document.getElementById("userId").value;
-        //     console.log(userId);
-        //     $.ajax({
-        //         url: "/sendPw",
-        //         type: "get",
-        //         data: {
-        //             "userMailid" : userMailid,
-        //             "userMaildomain" : userMaildomain,
-        //             "userId" : userId
-        //         },
-        //         success: function() {
-        //             alert('비밀번호가 재발급되었습니다. 로그인후 변경해주세요')
-        //             window.close()
-        //         }
-        //
-        //     })
-        //
-        // }
+        function sendPw(){
+            let userMail= document.getElementById("userEmail").value;
+            let mail = userMail.split('@')
+            console.log(mail)
+            let userMailid = mail[0];
+            console.log(userMailid)
+            let userMaildomain= mail[1];
+            console.log(userMaildomain)
+            let userId = document.getElementById("userId").value;
+            console.log(userId);
+            $.ajax({
+                url: "/sendPw",
+                type: "get",
+                data: {
+                    "userMailid" : userMailid,
+                    "userMaildomain" : userMaildomain,
+                    "userId" : userId
+                },
+                success: function() {
+                    alert('비밀번호가 "12345678"로 초기화되었습니다. 로그인 후 변경해주세요.')
+                    window.close()
+                }
+
+            })
+
+        }
+
 
 
     </script>

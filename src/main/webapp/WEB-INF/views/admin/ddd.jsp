@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page import="com.example.pathfinder.dto.*" %>
 <%@ page import="java.util.List" %>
 <%@ page import="com.example.pathfinder.util.CmmUtil" %>
@@ -415,7 +416,7 @@
                                 <div><strong>[</strong></div>
                                 <!-- 각 번호 페이지 버튼 -->
                                 <c:forEach var="num" begin="${noticePageMake.startPage}" end="${noticePageMake.endPage}">
-                                    <div><a href="/admin?tNo=${num}" class="num">${num}</a></div>
+                                    <div><a href="/adminPage?tNo=${num}" class="num">${num}</a></div>
                                 </c:forEach>
                                 <div><strong>]</strong></div>
                             </div>

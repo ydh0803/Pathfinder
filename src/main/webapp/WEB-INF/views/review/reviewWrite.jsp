@@ -37,20 +37,20 @@
             }
         }
 
-        // function readURL(input) {
-        //     if (input.files && input.files[0]) {
-        //         var reader = new FileReader();
-        //         reader.onload = function(e) {
-        //             document.getElementById('preview').src = e.target.result;
-        //             document.getElementById('preview').style.textAlign="left";
-        //             document.getElementById('preview').style.width="450px";
-        //             document.getElementById('preview').style.height="350px";
-        //         };
-        //         reader.readAsDataURL(input.files[0]);
-        //     } else {
-        //         document.getElementById('preview').src = "";
-        //     }
-        // }
+        function readURL(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('preview').src = e.target.result;
+                    document.getElementById('preview').style.textAlign="left";
+                    document.getElementById('preview').style.width="450px";
+                    document.getElementById('preview').style.height="350px";
+                };
+                reader.readAsDataURL(input.files[0]);
+            } else {
+                document.getElementById('preview').src = "";
+            }
+        }
 
     </script>
     <style>
@@ -70,8 +70,8 @@
         .img {
             position: absolute;
             width: 17px;
-            top: 10px;
-            right: 12px;
+            top: 0px;
+            right: 0px;
             margin: 0;
         }
 
@@ -165,6 +165,11 @@
         .subject {
             height: 1000px;
         }
+
+        textarea {
+            width: 100%;
+            height: 400px;
+        }
     </style>
 
     <title>메인</title>
@@ -183,10 +188,12 @@
             <input type="text" id="title" name="title" placeholder="제목">
             <input type="hidden" name="userNo" id="userNo" value="${user.userNo}">
             <br><hr>
-            <textarea style="resize: vertical;" id="contents" name="contents" placeholder="내용" rows="8"></textarea>
-            <input type="file" id="imglink" placeholder="사진">
-<%--            <input style="display: none;" type="file" id="file" name="file" onchange="readURL(this);">--%>
-            <input type="submit" id="write" value="작성"><input type="button" onclick="/reviewList" value="취소">
+            <textarea style="resize: vertical;" id="contents" name="contents" placeholder="내용" rows="8"></textarea><br><hr>
+            <label class="input-file-button" for="file">
+            사진첨부
+            </label><br>
+            <input style="display: none;" type="file" id="file" name="file" onchange="readURL(this);">
+            <input type="submit" id="write" value="작성"><input type="button" onclick="location.href='/review/reviewList'" value="취소"
         </form>
     </div>
 </div>

@@ -213,8 +213,8 @@
         .img {
             position: absolute;
             width: 17px;
-            top: 10px;
-            right: 12px;
+            top: 0px;
+            right: 0px;
             margin: 0;
         }
 
@@ -308,6 +308,15 @@
         .subject {
             height: 1000px;
         }
+        textarea {
+            width: 100%;
+        }
+
+        .reviewImg {
+            width: 100%;
+
+        }
+
     </style>
 
     <title>메인</title>
@@ -338,7 +347,7 @@
                 </c:when>
                 <c:otherwise>
                     <br>
-                    <img src="<%=CmmUtil.nvl(rDTO.getImglink())%>" width="40%" height="40%">
+                    <img class="reviewImg" src="<%=CmmUtil.nvl(rDTO.getImglink())%>" width="40%" height="40%">
                 </c:otherwise>
             </c:choose>
             <br>

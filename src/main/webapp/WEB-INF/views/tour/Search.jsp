@@ -116,6 +116,6 @@
         <a href="/tour/SearchDetail?contentid=<%=rDTO.getContentid()%>&title=<%=rDTO.getTitle()%>&tel=<%=rDTO.getTel()%>&firstimage=<%=rDTO.getFirstimage()%>&addr1=<%=rDTO.getAddr1()%>&addr2=<%=rDTO.getAddr2()%>"><%=rDTO.getTitle()%></a>
         </br>
         <%}%>
-        </div>
+        </div><a href="/index">메인 화면으로</a>
 </div>
 </body>
