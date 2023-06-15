@@ -69,6 +69,7 @@ public class AdminController {
         return "/NoticeDetail";
     }
 
+
     @GetMapping(value = "/noticeDelete")
     public String noticeDelete(HttpServletRequest request, Model model){
         int notice_no = Integer.parseInt(request.getParameter("nSeq"));

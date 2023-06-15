@@ -38,6 +38,20 @@
 
     }
 
+    int access = 0;
+    if (session.getAttribute("user")==null) {
+        access = 0;
+    } else {
+        UserDTO uDTO = (UserDTO) session.getAttribute("user");
+        System.out.println(uDTO.getAuth());
+        if (uDTO.getAuth().equals("admin")) {
+            access = 3;
+        } else {
+            access = 1;
+        }
+    }
+
+
     int rep = 0;
     if (session.getAttribute("user")!=null) {
         UserDTO uDTO = (UserDTO) session.getAttribute("user");
@@ -150,9 +164,11 @@
             alert("본인이 작성한 글만 수정 가능합니다.");
         }
         }
+
+
             //삭제하기
             function doDelete() {
-            if ("<%=edit%>" == 2) {
+            if ("<%=edit%>" === 2 ||  <%=access%> === 3) {
             if (confirm("작성한 글을 삭제하시겠습니까?")) {
             location.href = "/reviewDelete?nSeq=<%=String.valueOf(rDTO.getBoardNo())%>";
 

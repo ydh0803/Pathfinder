@@ -346,7 +346,8 @@
                                 <li>
                                     <ul>
                                         <li><%=cDTO.getBoardNo()%></li>
-                                        <li><a href="javascript:doDetail('<%=cDTO.getBoardNo()%>');">
+                                        <li><a>
+<%--                                            href="javascript:doDetail('<%=cDTO.getBoardNo()%>');"--%>
                                             <%=CmmUtil.nvl(cDTO.getTitle())%>
                                         </a></li>
                                         <li><%=cDTO.getUserName()%></li>
