@@ -8,8 +8,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -77,7 +80,43 @@ public class AdminController {
         pDTO.setNoticeNo(notice_no);
         adminService.deleteNotice(pDTO);
         model.addAttribute("msg","공지가 삭제되었습니다.");
-        return "/club/MsgToClose";
+        return "/admin/MsgToAdmin";
+    }
+
+
+    @GetMapping(value = "/admin/NoticeEdit")
+    public String NoticeEditInfo(HttpServletRequest request, ModelMap model) throws Exception {
+        log.info(this.getClass().getName() + ".BoardEditInfo start!");
+        String msg = "";
+        String nSeq = CmmUtil.nvl(request.getParameter("nSeq")); // 글번호(PK)
+        log.info("nSeq : " + nSeq);
+        NoticeDTO pDTO = new NoticeDTO();
+        pDTO.setNoticeNo(Integer.parseInt(nSeq));
+        NoticeDTO rDTO = adminService.getNoticeInfo(pDTO);
+        if (rDTO == null) {
+            rDTO = new NoticeDTO();
+        }
+        log.info(rDTO.getTitle());
+        model.addAttribute("rDTO", rDTO);
+        log.info(this.getClass().getName() + ".NoticeEditInfo end!");
+        return "/admin/NoticeEdit";
+    }
+
+    @PostMapping(value = "/noticeUpdate")
+    public String noticeUpdate(MultipartHttpServletRequest request, Model model) throws Exception {
+        String title = CmmUtil.nvl(request.getParameter("title"));
+        String contents = CmmUtil.nvl(request.getParameter("contents"));
+        int noticeNo = Integer.parseInt(CmmUtil.nvl(request.getParameter("nSeq")));
+
+            NoticeDTO pDTO = new NoticeDTO();
+            pDTO.setTitle(title);
+            pDTO.setContents(contents);
+            pDTO.setNoticeNo(noticeNo);
+            adminService.noticeUpdate(pDTO);
+            String msg = "공지가 수정되었습니다.";
+            model.addAttribute("msg", msg);
+        return "/admin/MsgToAdmin";
+
     }
 
     @GetMapping(value = "/admin/noticeInsertForm")

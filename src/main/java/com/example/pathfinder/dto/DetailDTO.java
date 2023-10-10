@@ -89,5 +89,9 @@ public class DetailDTO {
     private String reservationfood;
     private String scalefood;
 
+    //길찾기
+    private String mapx;
+    private String mapy;
+
 
 }

@@ -39,6 +39,23 @@
         update USER_INFO set USER_PW=#{userPw} where USER_NO=#{userNo}
     </update>
 
+    <!--개인 일정 추가-->
+    <insert id="insertCalendar" parameterType="CalendarDTO">
+        <selectKey keyProperty="calNo" resultType="int" order="BEFORE">
+            SELECT IFNULL(MAX(CAL_NO+1),1) FROM CALENDAR
+        </selectKey>
+        insert into CALENDAR(CAL_NO, USER_NO, TITLE, STARTDATE, ENDDATE)
+        VALUES(#{calNo},#{userNo}, #{title}, #{startdate}, #{enddate})
+    </insert>
 
+    <!--개인 일정 조회-->
+    <select id="getCalendarList" resultType="CalendarDTO">
+        select * from CALENDAR where USER_NO=#{userNo}
+    </select>
+
+    <!--개인 일정 삭제-->
+    <delete id="deleteCalendar">
+        delete from CALENDAR where STARTDATE=#{startdate} and ENDDATE=#{enddate} and USER_NO=#{userNo} and TITLE=#{title}
+    </delete>
 
 </mapper>

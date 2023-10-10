@@ -26,6 +26,10 @@ public interface IAdminMapper {
     //공지 상세보기
     NoticeDTO noticeDetail(NoticeDTO pDTO);
 
+    NoticeDTO getNoticeInfo(NoticeDTO pDTO) throws Exception;
+
+    int noticeUpdate(NoticeDTO pDTO) throws Exception;
+
     //공지 삭제
     int deleteNotice(NoticeDTO pDTO);
 

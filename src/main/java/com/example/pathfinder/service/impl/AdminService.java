@@ -9,7 +9,6 @@ import com.example.pathfinder.service.IAdminService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -68,6 +67,23 @@ public class AdminService implements IAdminService {
     @Override
     public NoticeDTO noticeDetail(NoticeDTO pDTO) {
         return adminMapper.noticeDetail(pDTO);
+    }
+
+    public NoticeDTO getNoticeInfo(NoticeDTO pDTO) throws Exception {
+
+        log.info(this.getClass().getName() + ".getNoticeInfo start!");
+
+
+        return adminMapper.getNoticeInfo(pDTO);
+
+    }
+
+    //게시글 수정
+    public NoticeDTO noticeUpdate(NoticeDTO pDTO) throws Exception{
+        log.info(this.getClass().getName() + ".noticeUpdate start!");
+        pDTO.setRegdate(localTime);
+        adminMapper.noticeUpdate(pDTO);
+        return pDTO;
     }
 
     @Override

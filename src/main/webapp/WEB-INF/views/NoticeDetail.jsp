@@ -1,6 +1,7 @@
 <%@ page import="com.example.pathfinder.dto.UserDTO" %>
 <%@ page import="java.util.Objects" %>
 <%@ page import="com.example.pathfinder.dto.NoticeDTO" %>
+<%@ page import="com.example.pathfinder.util.CmmUtil" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
     NoticeDTO rDTO = (NoticeDTO) request.getAttribute("rDTO");
@@ -54,7 +55,7 @@
 
         //삭제하기
         function goAdmin(){
-            location.href="/admin"
+            location.href="/adminPage"
         }
         function doDelete() {
             if ("<%=edit%>" == 2) {
@@ -67,6 +68,18 @@
 
             } else {
                 alert("본인이 작성한 글만 삭제 가능합니다.");
+            }
+        }
+
+        function doEdit() {
+            if ("<%=edit%>" == 2) {
+                location.href = "/admin/NoticeEdit?nSeq=<%=CmmUtil.nvl(String.valueOf(rDTO.getNoticeNo()))%>";
+
+            } else if ("<%=edit%>" === 3) {
+                alert("로그인 하시길 바랍니다.");
+
+            } else {
+                alert("본인이 작성한 글만 수정 가능합니다.");
             }
         }
 
@@ -226,12 +239,13 @@
         </div>
         <div style="font-size: 18px" class="box">
             <%if (edit==2){%>
+            <a onclick="doEdit()">[수정]</a>
             <a onclick="goAdmin()">[목록]</a>
             <a onclick="doDelete()">[삭제]</a>
             <%}%>
         </div>
 
-
+        <a href="/index">메인 화면으로</a>
     </div>
 </div>
 

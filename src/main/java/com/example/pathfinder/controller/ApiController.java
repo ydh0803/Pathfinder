@@ -277,6 +277,8 @@ public class ApiController {
         String tel = CmmUtil.nvl(request.getParameter("tel"));
         String firstimage = CmmUtil.nvl(request.getParameter("firstimage"));
         String addr1 = CmmUtil.nvl(request.getParameter("addr1"));
+        String mapx = CmmUtil.nvl(request.getParameter("mapx"));
+        String mapy = CmmUtil.nvl(request.getParameter("mapy"));
         String api = String.valueOf(ApiSearchDetail.main(contentid, contenttypeid));
         log.info(contentid);
         log.info(title);
@@ -334,6 +336,8 @@ public class ApiController {
         rDTO.setTel(tel);
         rDTO.setFirstimage(firstimage);
         rDTO.setAddr1(addr1);
+        rDTO.setMapx(mapx);
+        rDTO.setMapy(mapy);
 
 
         model.addAttribute("Detail", rDTO);

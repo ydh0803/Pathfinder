@@ -3,6 +3,7 @@
 <%@ page import="java.util.Objects" %>
 <%@ page import="com.example.pathfinder.dto.DetailDTO" %>
 <%@ page import="org.springframework.ui.Model" %>
+<%@ page import="com.example.pathfinder.dto.UserDTO" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
     DetailDTO dDTO = (DetailDTO) request.getAttribute("Detail");
@@ -102,7 +103,45 @@
             border-color: #05a;
         }
     </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        function bookmark() {
 
+
+            var url = window.location.href;
+            var title = '<%=dDTO.getTitle()%>';
+            var userNo = <%= ((UserDTO) session.getAttribute("user")) != null ? ((UserDTO) session.getAttribute("user")).getUserNo() : 0 %>;
+
+
+            if (userNo == null) {
+                    var userNo = 0;
+                }
+
+            console.log(url);
+            console.log(title);
+            console.log(userNo)
+
+            if (userNo !== 0) {
+                $.ajax({
+                    type: 'POST',  // 또는 'GET' 등 HTTP 요청 방법 설정
+                    url: '/user/bookmark',  // 요청을 보낼 URL 설정
+                    data: {url: url, title: title, userNo: userNo},  // 요청과 함께 전송할 데이터 설정
+                    success: function (response) {
+                        // 성공 시 실행할 동작을 여기에 작성합니다.
+                        console.log(response);
+                    },
+                    error: function (error) {
+                        // 오류 시 실행할 동작을 여기에 작성합니다.
+                        console.error(error);
+                    }
+                });
+            } else {
+                window.alert('북마크는 로그인 후 사용할 수 있습니다.')
+                console.log("로그인 필요");
+            }
+        }
+
+    </script>
 </head>
 <body>
 <div class="result">
@@ -125,9 +164,7 @@
         <a>신용카드 사용여부 : <%=dDTO.getChkcreditcard()%></a><br/>
         <a>유모차 대여여부 : <%=dDTO.getChkbabycarriage()%></a><br/>
 
-
-
-
+<button onclick="bookmark()" value="북마크">북마크</button>
 
 
     </div><a href="/index">메인 화면으로</a>

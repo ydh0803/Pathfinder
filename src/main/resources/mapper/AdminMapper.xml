@@ -49,6 +49,17 @@
         delete from NOTICE where NOTICE_NO=#{noticeNo}
     </delete>
 
+    <!-- 게시판 상세보기 쿼리 -->
+    <select id="getNoticeInfo" resultType="NoticeDTO">
+        SELECT B.NOTICE_NO, B.TITLE, B.CONTENTS, B.REGDATE, B.ADMINNAME
+        FROM NOTICE B
+        WHERE B.NOTICE_NO = #{noticeNo}
+    </select>
+    <!-- 게시판 글 수정 쿼리-->
+    <update id="noticeUpdate" parameterType="NoticeDTO">
+        update NOTICE set TITLE=#{title}, CONTENTS=#{contents}, REGDATE=#{regdate} where NOTICE_NO=#{noticeNo}
+    </update>
+
     <!--관리자 유저정보 호출 -->
     <select id="getUserInfo" parameterType="UserDTO" resultType="UserDTO">
         SELECT * from USER_INFO WHERE USER_NO=#{userNo}

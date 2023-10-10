@@ -278,7 +278,7 @@
                     success: function (data) {
                         $.each(data, function (index, val){
                             $('#gpsList').append('<img src="' +val.firstimage+'" style="width:150px;height:150px;">' +
-                                '<a href="/tour/gpsDetail?contentid='+val.contentid+'&title='+val.title+'&addr1='+val.addr1+'&tel='+val.tel+'&firstimage='+val.firstimage+'&contenttypeid='+ContentTypeId+'"> '+val.title+' <a/>' + '</br>')
+                                '<a href="/tour/gpsDetail?contentid='+val.contentid+'&title='+val.title+'&addr1='+val.addr1+'&tel='+val.tel+'&firstimage='+val.firstimage+'&mapx='+val.mapx+'&mapy='+val.mapy+'&contenttypeid='+ContentTypeId+'"> '+val.title+' <a/>' + '</br>')
 
 
             })}})})}

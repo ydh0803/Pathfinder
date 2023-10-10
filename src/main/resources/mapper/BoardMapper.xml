@@ -49,16 +49,6 @@
 
     </select>
 
-<!--    <select id="getListPagingByCourse" parameterType="java.util.HashMap" resultType="BoardDTO">-->
-
-<!--        select * from (-->
-<!--                          select R.BOARD_NO, R.TITLE, R.CONTENTS, R.REGDATE, U.USER_NAME, R.IMGLINK-->
-<!--                          from REVIEWBOARD R, USER_INFO U-->
-<!--                          WHERE U.UserNo = R.UserNo-->
-<!--                          order by BOARD_NO asc) as T1-->
-<!--        limit #{skip},#{amount}-->
-
-<!--    </select>-->
 
     <insert id="insertComment" parameterType="CommentDTO">
         <selectKey keyProperty="commentNo" resultType="int" order="BEFORE">

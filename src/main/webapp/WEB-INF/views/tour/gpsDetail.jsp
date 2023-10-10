@@ -3,6 +3,7 @@
 <%@ page import="java.util.Objects" %>
 <%@ page import="com.example.pathfinder.dto.DetailDTO" %>
 <%@ page import="org.springframework.ui.Model" %>
+<%@ page import="com.example.pathfinder.dto.UserDTO" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
     DetailDTO dDTO = (DetailDTO) request.getAttribute("Detail");
@@ -102,9 +103,48 @@
             border-color: #05a;
         }
     </style>
+    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=344db8e40afa1ae457b074b2bc2932bc&libraries=services"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        function bookmark() {
 
+
+            var url = window.location.href;
+            var title = '<%=dDTO.getTitle()%>';
+            var userNo = <%= ((UserDTO) session.getAttribute("user")) != null ? ((UserDTO) session.getAttribute("user")).getUserNo() : 0 %>;
+
+
+            if (userNo == null) {
+                var userNo = 0;
+            }
+
+            console.log(url);
+            console.log(title);
+            console.log(userNo)
+
+            if (userNo !== 0) {
+                $.ajax({
+                    type: 'POST',  // 또는 'GET' 등 HTTP 요청 방법 설정
+                    url: '/user/bookmark',  // 요청을 보낼 URL 설정
+                    data: {url: url, title: title, userNo: userNo},  // 요청과 함께 전송할 데이터 설정
+                    success: function (response) {
+                        // 성공 시 실행할 동작을 여기에 작성합니다.
+                        console.log(response);
+                    },
+                    error: function (error) {
+                        // 오류 시 실행할 동작을 여기에 작성합니다.
+                        console.error(error);
+                    }
+                });
+            } else {
+                window.alert('북마크는 로그인 후 사용할 수 있습니다.')
+                console.log("로그인 필요");
+            }
+        }
+
+    </script>
 </head>
-<body>
+<body onload="searchAddrFromCoords()">
 <div class="result">
 
 
@@ -304,9 +344,90 @@
 
 
 
+<script>
+    // 주소-좌표 변환 객체를 생성합니다
+    var geocoder = new kakao.maps.services.Geocoder();
+    let addr = "";
+    let mapx = "";
+    let mapy = "";
 
 
 
+    var callback = function (result, status) {
+
+    }
+
+    function searchAddrFromCoords() {
+        var y = '<%=dDTO.getMapy()%>';
+        var x = '<%=dDTO.getMapx()%>';
+
+        geocoder.transCoord(x, y, transCoordCB, {
+            input_coord: kakao.maps.services.Coords.WGS84, // 변환을 위해 입력한 좌표계 입니다
+            output_coord: kakao.maps.services.Coords.WCONGNAMUL // 변환 결과로 받을 좌표계 입니다
+        });
+
+// 좌표 변환 결과를 받아서 처리할 콜백함수 입니다.
+        function transCoordCB(result, status) {
+            mapx = result[0].x;
+            mapy = result[0].y;
+
+
+            }
+
+        navigator.geolocation.getCurrentPosition(function (position) {
+            let lat = position.coords.latitude; // 위도
+            let lon = position.coords.longitude; // 경도
+
+            // 좌표로 행정동 주소 정보를 요청합니다
+            geocoder.coord2Address(lon, lat, function (result, status, message) {
+                if (status === kakao.maps.services.Status.OK && result.length > 0) {
+                    console.log(result)
+                    addr = result[0].address.address_name;
+                    console.log(addr);
+
+                    // 여기에서 주소 정보를 사용할 수 있습니다.
+                } else {
+                    console.error('주소 정보를 가져오는데 실패했습니다.');
+                }
+            });
+        });
+    }
+
+    // function searchDetailAddrFromCoords(coords, callback) {
+    //     // 좌표로 법정동 상세 주소 정보를 요청합니다
+    //     geocoder.coord2Address(coords.getLng(), coords.getLat(), callback);
+    // }
+
+
+    function openMap() {
+
+        let how = document.getElementById("target").value
+        console.log(how)
+
+
+    // JavaScript 변수에 JSP 데이터 할당
+    var title = '<%=dDTO.getTitle()%>';
+    <%--var mapy = '<%=dDTO.getMapy()%>';--%>
+    <%--var mapx = '<%=dDTO.getMapx()%>';--%>
+    console.log(title);
+    console.log(mapy);
+    console.log(mapx);
+    console.log(addr);
+
+
+        window.open("https://map.kakao.com/?map_type=TYPE_MAP&target=" + how + "&rt=%2C%2C" + mapx + "%2C" + mapy + "&rt1=" + addr + "&rt2=" + title + "&rtIds=%2C&rtTypes=%2C",width=500,height=500)
+
+    };
+</script>
+        <select id="target">
+            <option value="car">자동차</option>
+            <option value="transit">대중교통</option>
+            <option value="walk">도보</option>
+            <option value="bike">자전거</option>
+        </select>
+        <button class="map-btn" id="map-btn" onclick="openMap()">길찾기</button><br/><br/>
+
+        <button onclick="bookmark()" value="북마크">북마크</button>
 
     </div><a href="/index">메인 화면으로</a>
 </div>

@@ -50,7 +50,7 @@ public class BoardController {
         if(!Objects.requireNonNull(request.getFile("file")).isEmpty()) {
             MultipartFile file = request.getFile("file");
             String imgPath = s3Service.upload(file);
-            String imglink = "https://pathfinders3.s3.ap-northeast-2.amazonaws.com/" + imgPath;
+            String imglink = "https://pathfinder22.s3.ap-northeast-2.amazonaws.com/" + imgPath;
             Integer userNo = Integer.parseInt(request.getParameter("userNo"));
             log.info(title);
             log.info(contents);
@@ -200,11 +200,12 @@ public class BoardController {
         String contents = CmmUtil.nvl(request.getParameter("contents"));
         int boardNo = Integer.parseInt(CmmUtil.nvl(request.getParameter("nSeq")));
         String imgLink = CmmUtil.nvl(request.getParameter("imglink"));
+        log.info(imgLink);
         if(!Objects.requireNonNull(request.getFile("file")).isEmpty()) {
-            s3Service.deleteS3(imgLink);
+            s3Service.deleteS3("img " + imgLink);
             MultipartFile file = request.getFile("file");
             String imgPath = s3Service.upload(file);
-            String imglink = "https://pathfinders3.s3.ap-northeast-2.amazonaws.com/" + imgPath;
+            String imglink = "https://pathfinder22.s3.ap-northeast-2.amazonaws.com/" + imgPath;
             log.info(title);
             log.info(contents);
             log.info(imglink);

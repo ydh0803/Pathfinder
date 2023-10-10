@@ -40,7 +40,7 @@
     }
 
     function goList() {
-        location.href = "/admin";
+        location.href = "/adminPage";
     }
     function userDelete() {
         if (confirm('<%=rDTO.getUserName()%>회원을 삭제하시겠습니까?')){

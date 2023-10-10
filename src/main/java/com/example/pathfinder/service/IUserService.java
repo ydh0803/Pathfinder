@@ -1,5 +1,6 @@
 package com.example.pathfinder.service;
 
+import com.example.pathfinder.dto.BookmarkDTO;
 import com.example.pathfinder.dto.NoticeDTO;
 import com.example.pathfinder.dto.UserDTO;
 

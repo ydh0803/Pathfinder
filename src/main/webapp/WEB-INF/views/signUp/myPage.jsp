@@ -95,6 +95,7 @@
             border-color: #05a;
         }
     </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     function deleteUser() {
         console.log("탈퇴")
@@ -107,6 +108,25 @@
         window.open('/user/chgName','이름변경','width=800px,height=400px')
     }
 
+    function getBookmark() {
+        var userNo = <%=uDTO.getUserNo()%>;
+        console.log(userNo);
+
+        $.ajax({
+            type: 'GET',  // 또는 'GET' 등 HTTP 요청 방법 설정
+            url: '/bookmarkList',  // 요청을 보낼 URL 설정
+            data: {userNo: userNo},  // 요청과 함께 전송할 데이터 설정
+            success: function (response) {
+                // 성공 시 실행할 동작을 여기에 작성합니다.
+                console.log(response);
+            },
+            error: function (error) {
+                // 오류 시 실행할 동작을 여기에 작성합니다.
+                console.error(error);
+            }
+        });
+
+    }
 
 </script>
 </head>
@@ -120,7 +140,10 @@
         <p> 닉네임 : <%=uDTO.getUserName()%></p><a class="btn" onclick="chgName()"><strong style="color:blue">변경</strong></a>
         <p> 이메일 : <%=uDTO.getUserMailid()%>@<%=uDTO.getUserMaildomain()%></p>
 
-        <a onclick="window.open('/pwCheck','비밀번호 변경','width=600 height=400')">비밀번호 변경</a>
+        <a onclick="window.open('/pwCheck','비밀번호 변경','width=600 height=400')">비밀번호 변경</a><br/><br/>
+
+        <a href="/calendar">일정</a><br/><br/>
+        <a href="/bookmark">북마크</a><br/><br/>
         <a href="/logOut">로그아웃</a><br/>
         <button onclick="deleteUser()">탈퇴</button>
 

@@ -1,8 +1,7 @@
 package com.example.pathfinder.service.impl;
 
 import com.example.pathfinder.Mapper.IUserMapper;
-import com.example.pathfinder.dto.NoticeDTO;
-import com.example.pathfinder.dto.UserDTO;
+import com.example.pathfinder.dto.*;
 import com.example.pathfinder.service.IUserService;
 import com.example.pathfinder.util.CmmUtil;
 import lombok.RequiredArgsConstructor;
@@ -100,10 +99,10 @@ public class UserService implements IUserService {
         log.info(userMailid+"@"+userMaildomain);
 
         String Mail = userMailid + "@" + userMaildomain;
-        log.info(Mail);
+        log.info("mail1 " + Mail);
 
         UserDTO rDTO = userMapper.mailCheck(pDTO);
-        log.info("ggg" + rDTO);
+        log.info("rDTO mail " + rDTO);
 
         if (rDTO == null) {
             res = 0;
@@ -111,7 +110,7 @@ public class UserService implements IUserService {
             String userMailid2 = CmmUtil.nvl(rDTO.getUserMailid());
             String userMaildomain2 = CmmUtil.nvl(rDTO.getUserMaildomain());
             String Mail2 = userMailid2 + "@" + userMaildomain2;
-            log.info(Mail2);
+            log.info("mail2 " + Mail2);
             if (Mail.equals(Mail2)) {
                 res = 1;
             } else {
@@ -144,6 +143,54 @@ public class UserService implements IUserService {
     public int chgName(UserDTO pDTO) throws Exception {
         userMapper.chgName(pDTO);
         return 0;
+    }
+
+    public List<CalendarDTO> getCalendarList(CalendarDTO pDTO) throws Exception{
+        return userMapper.getCalendarList(pDTO);
+    }
+
+    public void insertCalendar(CalendarDTO pDTO) throws Exception{
+        userMapper.insertCalendar(pDTO);
+    }
+
+    public void deleteCalendar(CalendarDTO pDTO) throws Exception{
+        userMapper.deleteCalendar(pDTO);
+    }
+
+    public void addBookmark(BookmarkDTO bDTO){
+        log.info(this.getClass().getName() + ".upload start");
+        log.info(String.valueOf(bDTO));
+        log.info(this.getClass().getName() + ".upload end");
+        userMapper.addBookmark(bDTO);
+
+    }
+
+    public List<BookmarkDTO> getBookmark(BookmarkDTO bDTO) throws Exception{
+        log.info(this.getClass().getName() + ".select start");
+        log.info(String.valueOf(bDTO));
+        return userMapper.getBookmark(bDTO);
+
+    }
+
+//    public List<BookmarkDTO> getBookmark(BookmarkDTO bDTO) {
+//
+//        return userMapper.getBookmark(bDTO);
+//    }
+
+    public List<BookmarkDTO> getListPagingByCourse(int pNo, BookmarkDTO pDTO) {
+        HashMap<String, Object> hMap = new HashMap();
+        Criteria cri = new Criteria();
+        cri.setPageNum(pNo);
+        hMap.put("skip", cri.getSkip());
+        hMap.put("amount", cri.getAmount());
+        hMap.put("userNo", pDTO.getUserNo());
+
+        return userMapper.getListPagingByCourse(hMap);
+    }
+
+    public int totalCountByCourse(BookmarkDTO pDTO) throws Exception {
+
+        return userMapper.totalCountByCourse(pDTO);
     }
 
 

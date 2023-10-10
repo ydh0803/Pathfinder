@@ -33,6 +33,10 @@ public interface IAdminService {
     //회원 정보 호출
     UserDTO getUserInfo(UserDTO pDTO) throws Exception;
 
+    NoticeDTO getNoticeInfo(NoticeDTO pDTO) throws Exception;
+
+    NoticeDTO noticeUpdate(NoticeDTO pDTO) throws Exception;
+
     //회원 작성글 목록
     List<BoardDTO> getUserBoard(UserDTO pDTO);
 

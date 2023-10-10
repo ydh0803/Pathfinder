@@ -67,7 +67,8 @@
         }
 
 
-    </script>    <script>
+    </script>
+    <script>
     function idCheck() {
         $.ajax({
             url : "/idCheck",

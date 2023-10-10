@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.pathfinder.Mapper.IUserMapper">
+
+
+    <insert id="addBookmark" parameterType="BookmarkDTO">
+        <selectKey keyProperty="markNo" resultType="int" order="BEFORE">
+            SELECT IFNULL(MAX(MARK_NO+1),1) FROM BOOKMARK
+        </selectKey>
+        INSERT INTO BOOKMARK(USER_NO, MARK_NO, TITLE, LINK)
+        VALUES(#{userNo}, #{markNo}, #{title}, #{link})
+    </insert>
+
+    <select id="totalCountByCourse" parameterType="BookmarkDTO" resultType="int">
+        select count(*) from BOOKMARK WHERE USER_NO=#{userNo}
+    </select>
+
+    <select id="getListPagingByCourse" parameterType="java.util.HashMap" resultType="BookmarkDTO">
+
+        select * from (
+                          select MARK_NO, USER_NO, TITLE, LINK
+                          from BOOKMARK
+                          WHERE USER_NO=#{userNo}
+                          order by MARK_NO asc) as T1
+        limit #{skip},#{amount}
+
+    </select>
+
+    <select id="getBookmark" parameterType="BookmarkDTO" resultType="BookmarkDTO">
+        select MARK_NO, USER_NO, TITLE, LINK
+        from BOOKMARK
+        WHERE USER_NO = #{userNo}
+        order by MARK_NO asc
+    </select>
+
+</mapper>
