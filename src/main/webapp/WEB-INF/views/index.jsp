@@ -54,6 +54,8 @@
     }
 
 
+
+
 </script>
     <style>
         .search {
@@ -216,10 +218,10 @@
             vertical-align:baseline;
         }
 
-        #ulTable > li > ul > li:first-child               {width:20%;} /*No 열 크기*/
-        #ulTable > li > ul > li:first-child +li           {width:45%;} /*제목 열 크기*/
-        #ulTable > li > ul > li:first-child +li+li        {width:20%;} /*작성일 열 크기*/
-        #ulTable > li > ul > li:first-child +li+li+li     {width:15%;} /*작성자 열 크기*/
+        #ulTable > li > ul > li:first-child               {width:10%;} /*No 열 크기*/
+        #ulTable > li > ul > li:first-child +li           {width:50%;} /*제목 열 크기*/
+        #ulTable > li > ul > li:first-child +li+li        {width:15%;} /*작성일 열 크기*/
+        #ulTable > li > ul > li:first-child +li+li+li     {width:25%;} /*작성자 열 크기*/
 
         #divPaging {
             clear:both;
@@ -272,7 +274,17 @@
     <input type="button" onClick="location.href='/fiesta'" value="축제 지도" >
     <input type="button" onClick="location.href='/gps'" value="주변 시설" >
     <input type="button" onclick="location.href='/review/reviewList'" value="리뷰 게시판">
-
+    <% if(session.getAttribute("user") == null) { %>
+    <input type="button" onclick="openChatPopup();" value="지역 채팅">
+    <script>
+        function openChatPopup() {
+                alert("로그인이 필요합니다.");
+        }
+    </script>
+    <% } else {%>
+    <input type="button" onClick="location.href='/chatGroup'" value="지역 채팅" >
+    <% } %>
+    <input type="button" onClick="location.href='/tour/news'" value="여행 뉴스" >
     <div >
         <div style="text-align: center" class="col-md-6">
             <div style="text-align: center" id="mainWrapper">
@@ -284,7 +296,7 @@
                     <ul id ="ulTable">
                         <li>
                             <ul>
-                                <li>공지번호</li>
+                                <li>번호</li>
                                 <li>제목</li>
                                 <li>작성자</li>
                                 <li>작성일</li>

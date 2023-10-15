@@ -1,7 +1,10 @@
 <%@ page import="com.example.pathfinder.dto.UserDTO" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
-<% UserDTO uDTO = (UserDTO) session.getAttribute("user"); %>
+<%
+    UserDTO uDTO = (UserDTO) session.getAttribute("user");
+    String userName = uDTO.getUserName();
+%>
 
 <head>
     <style>
@@ -128,6 +131,28 @@
 
     }
 
+    function getStamp() {
+        var userNo = <%=uDTO.getUserNo()%>;
+        console.log(userNo);
+
+        $.ajax({
+            type: 'GET',  // 또는 'GET' 등 HTTP 요청 방법 설정
+            url: '/stamp',  // 요청을 보낼 URL 설정
+            data: {userNo: userNo},  // 요청과 함께 전송할 데이터 설정
+            success: function (response) {
+                // 성공 시 실행할 동작을 여기에 작성합니다.
+                console.log(response);
+            },
+            error: function (error) {
+                // 오류 시 실행할 동작을 여기에 작성합니다.
+                console.error(error);
+            }
+        });
+
+    }
+
+
+
 </script>
 </head>
 <body>
@@ -144,6 +169,7 @@
 
         <a href="/calendar">일정</a><br/><br/>
         <a href="/bookmark">북마크</a><br/><br/>
+        <a href="/stamp">방문 인증</a><br/><br/>
         <a href="/logOut">로그아웃</a><br/>
         <button onclick="deleteUser()">탈퇴</button>
 

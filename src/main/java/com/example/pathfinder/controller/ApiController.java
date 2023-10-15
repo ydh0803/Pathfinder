@@ -1,11 +1,14 @@
 package com.example.pathfinder.controller;
 
 import com.example.pathfinder.dto.*;
+//import com.example.pathfinder.service.impl.TourService;
+import com.example.pathfinder.service.impl.TourService;
 import com.example.pathfinder.util.*;
 import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,6 +27,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 @Slf4j
 public class ApiController {
+
+    @Autowired
+    TourService tourService;
 
     @GetMapping("keywordSearch")
     public String Keyword(HttpServletRequest request, Model model) throws IOException, ParseException {
@@ -347,51 +353,57 @@ public class ApiController {
         return "/tour/gpsDetail";
     }
 
-//    @GetMapping("getWeather")
-//    public String getWeather(HttpServletRequest request, Model model) throws IOException, ParseException {
-//
-//        log.info(this.getClass().getName() + ".Weather start");
-//
-//        String day = CmmUtil.nvl(request.getParameter("day"));
-//        String time = CmmUtil.nvl(request.getParameter("time"));
-//        String gridX = CmmUtil.nvl(request.getParameter("lon"));
-//        String gridY = CmmUtil.nvl(request.getParameter("lat"));
-//
-//        String api = String.valueOf(ApiWeather.main(day, time, gridX, gridY));
-//
-//        JSONParser jsonParser = new JSONParser();
-//        JSONObject obj = (JSONObject) jsonParser.parse(api);
-//        JSONObject response = (JSONObject) obj.get("response");
-//        JSONObject body = (JSONObject) response.get("body");
-//        JSONObject items = (JSONObject) body.get("items");
-//        JSONArray item = (JSONArray) items.get("item");
-//        log.info(String.valueOf(item));
-//
-//        List<WeatherDTO> list = new ArrayList<WeatherDTO>();
-//        for(Object arr : item){
-//            JSONObject array = (JSONObject) arr;
-//            WeatherDTO rDTO = new WeatherDTO();
-//            rDTO.setLat((String) array.get("lat"));
-//            rDTO.setLon((String) array.get("lon"));
-//            rDTO.setTitle((String) array.get("title"));
-//            rDTO.setContenttypeid((String) array.get("contenttypeid"));
-//            rDTO.setFirstimage2((String) array.get("firstimage2"));
-//            rDTO.setFirstimage((String) array.get("firstimage"));
-//            rDTO.setSigungucode((String) array.get("sigungucode"));
-//            rDTO.setTel((String) array.get("tel"));
-//            rDTO.setAddr1((String) array.get("addr1"));
-//            rDTO.setAddr2((String) array.get("addr2"));
-//
-//            list.add(rDTO);
-//
-//        }
-//
-//        log.info(list.toString());
-//        model.addAttribute("list", list);
-//
-//
-//        return "/tour/Search";
-//    }
+    @GetMapping(value = "/tour/certificateRegForm")
+    public String certificateRegForm(HttpServletRequest request, Model model) throws Exception {
+        String addr1 = CmmUtil.nvl(request.getParameter("addr1"));
+        String title = CmmUtil.nvl(request.getParameter("title"));
+        log.info(title);
+        log.info(addr1);
+        model.addAttribute("title", title);
+        model.addAttribute("addr1",addr1);
+        return "/tour/certificateReg";
+    }
+
+    @ResponseBody
+    @GetMapping("/tour/regCertificate")
+    public int regCertificate(HttpServletRequest request, HttpSession session) throws Exception{
+
+        int res = 0;
+
+        String title = CmmUtil.nvl(request.getParameter("title"));
+        log.info(title);
+        TourCertificateDTO pDTO = new TourCertificateDTO();
+        UserDTO uDTO = (UserDTO) session.getAttribute("user");
+        log.info(String.valueOf(uDTO.getUserNo()));
+        pDTO.setCertificate(title);
+        pDTO.setUserNo(uDTO.getUserNo());
+        pDTO.setRegDt(DateUtil.getDateTime("yyyy-MM-dd hh:mm"));
+
+        tourService.insertCertificate(pDTO);
+
+        return res;
+    }
+
+    @GetMapping("/stamp")
+    public String Stamp(HttpSession session, Model model) throws Exception {
+        log.info(this.getClass().getName() + ".stampList start");
+
+        UserDTO uDTO = (UserDTO) session.getAttribute("user");
+        int userNo = uDTO.getUserNo();
+        log.info(String.valueOf(userNo));
+
+        TourCertificateDTO bDTO = new TourCertificateDTO();
+        bDTO.setUserNo(userNo);
+
+        List<TourCertificateDTO> bList = tourService.getStamp(bDTO);
+        model.addAttribute("bList", bList);
+
+        for (TourCertificateDTO stamp : bList) {
+            log.info(stamp.getCertificate() + stamp.getRegDt());
+        }
+
+        return "/tour/stamp";
+    }
 
 
 }

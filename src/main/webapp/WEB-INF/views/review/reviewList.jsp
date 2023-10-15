@@ -211,10 +211,9 @@
         }
 
         #ulTable > li > ul > li:first-child           	{width:10%;} /*No 열 크기*/
-        #ulTable > li > ul > li:first-child +li       	{width:30%;} /*제목 열 크기*/
-        #ulTable > li > ul > li:first-child +li+li    	{width:25%;} /*코스명 열 크기*/
-        #ulTable > li > ul > li:first-child +li+li+li 	{width:15%;} /*작성자 열 크기*/
-        #ulTable > li > ul > li:first-child +li+li+li+li{width:20%;} /*작성일 열 크기*/
+        #ulTable > li > ul > li:first-child +li       	{width:40%;} /*제목 열 크기*/
+        #ulTable > li > ul > li:first-child +li+li   	{width:15%;} /*작성자 열 크기*/
+        #ulTable > li > ul > li:first-child +li+li+li   {width:35%;} /*작성일 열 크기*/
 
         #divPaging {
             padding-top: 20px;

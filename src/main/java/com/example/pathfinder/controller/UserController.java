@@ -388,28 +388,6 @@ public class UserController {
 
     }
 
-//    @GetMapping("/bookmarkList")
-//    public String BookmarkList(HttpSession session, Model model, HttpServletRequest request) throws Exception {
-//        log.info(this.getClass().getName() + ".Bookmark start");
-//        UserDTO uDTO = (UserDTO) session.getAttribute("user");
-//
-//        int tNo = 1;
-//        if (request.getParameter("tNo") != null) {
-//            log.info("메인");
-//            tNo = Integer.parseInt(request.getParameter("tNo"));
-//            List<NoticeDTO> nList = userService.getNoticePaging(tNo);
-//            model.addAttribute("rList", nList);
-//            int result = userService.userTotalCount(nCri);
-//            PageMakeDTO noticePageMake = new PageMakeDTO(nCri, result);
-//            model.addAttribute("noticePageMake", noticePageMake);
-//        }
-//        model.addAttribute("rList", userService.getNoticePaging(tNo));
-//        int result = userService.noticeTotalCount(nCri);
-//        PageMakeDTO noticePageMake = new PageMakeDTO(nCri, result);
-//        model.addAttribute("noticePageMake", noticePageMake);
-//
-//
-//        return "/signUp/bookmark";
-//    }
+
 
 }

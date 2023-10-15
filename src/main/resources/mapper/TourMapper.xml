@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- JAVA와 연결할 Mapper 파일 설정 -->
+<mapper namespace="com.example.pathfinder.Mapper.ITourMapper">
+    <!-- __________________________________완주 종주소 등록__________________________________ -->
+    <!--종주 관리소 등록-->
+    <insert id="regCertificate" parameterType="TourCertificateDTO">
+        <selectKey keyProperty="regSeq" resultType="int" order="BEFORE">
+            SELECT IFNULL(MAX(REG_SEQ+1),1) FROM CERTIFICATE
+        </selectKey>
+        insert into CERTIFICATE values (#{regSeq}, #{userNo}, #{certificate}, #{regDt})
+    </insert>
+
+    <!--종주 관리소 등록값 호출-->
+    <select id="getStamp" resultType="TourCertificateDTO">
+        select * from CERTIFICATE where USER_NO=#{userNo}
+    </select>
+</mapper>

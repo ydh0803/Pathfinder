@@ -164,7 +164,22 @@
         <a>신용카드 사용여부 : <%=dDTO.getChkcreditcard()%></a><br/>
         <a>유모차 대여여부 : <%=dDTO.getChkbabycarriage()%></a><br/>
 
-<button onclick="bookmark()" value="북마크">북마크</button>
+        <button onclick="bookmark()" value="북마크">북마크</button>
+
+        <% if(session.getAttribute("user") == null) { %>
+        <input type="button" onclick="openChatPopup();" value="인증">
+        <script>
+            function openChatPopup() {
+                alert("로그인이 필요합니다.");
+            }
+        </script>
+        <% } else {%>
+        <a href="/tour/certificateRegForm?title=<%=dDTO.getTitle()%>&addr1=<%=dDTO.getAddr1()%>">인증</a>
+        <% } %>
+
+
+
+
 
 
     </div><a href="/index">메인 화면으로</a>
