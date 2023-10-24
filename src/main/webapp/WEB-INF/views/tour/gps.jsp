@@ -30,7 +30,7 @@
         }
 
         .main {
-            width: 400px;
+            width: 600px;
             margin: 16px auto;
             font-size: 16px;
         }

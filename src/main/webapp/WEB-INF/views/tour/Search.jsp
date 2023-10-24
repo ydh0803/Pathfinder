@@ -113,7 +113,7 @@
 
         %>
         <img src="<%=rDTO.getFirstimage2()%>" style="width:150px;height:150px;"/>
-        <a href="/tour/SearchDetail?contentid=<%=rDTO.getContentid()%>&title='<%=rDTO.getTitle()%>'&tel=<%=rDTO.getTel()%>&firstimage=<%=rDTO.getFirstimage()%>&addr1=<%=rDTO.getAddr1()%>&addr2=<%=rDTO.getAddr2()%>"><%=rDTO.getTitle()%></a>
+        <a href="/tour/SearchDetail?contentid=<%=rDTO.getContentid()%>&title=<%=rDTO.getTitle()%>&tel=<%=rDTO.getTel()%>&firstimage=<%=rDTO.getFirstimage()%>&addr1=<%=rDTO.getAddr1()%>&addr2=<%=rDTO.getAddr2()%>"><%=rDTO.getTitle()%></a>
         </br>
         <%}%>
         </div><a href="/index">메인 화면으로</a>

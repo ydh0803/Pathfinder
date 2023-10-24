@@ -60,10 +60,20 @@
     <style>
         .search {
             position: relative;
-            width: 300px;
+            width: 700px;
+            left: 10%;
         }
 
-        input {
+        .searchbar {
+            width: 100%;
+            border: 1px solid #bbb;
+            border-radius: 8px;
+            padding: 10px 12px;
+            font-size: 14px;
+
+        }
+
+        .btn {
             width: 100%;
             border: 1px solid #bbb;
             border-radius: 8px;
@@ -74,15 +84,16 @@
         .img {
             position: absolute;
             width: 17px;
-            top: 0px;
-            right: 0px;
+            top: 10px;
+            right: 20px;
             margin: 0;
         }
 
         .menu {
             position: absolute;
-            width: 45px;
-            height: 35px;
+            width: 55px;
+            height: 45px;
+            right: -10%;
         }
 
         .admin {
@@ -100,7 +111,7 @@
         }
 
         .main {
-            width: 400px;
+            width: 1000px;
             margin: 16px auto;
             font-size: 16px;
         }
@@ -179,6 +190,8 @@
             text-align:center;
             padding:0;
             margin:0;
+            width: 800px;
+            left: 10%;
         }
 
         #mainWrapper{
@@ -219,7 +232,7 @@
         }
 
         #ulTable > li > ul > li:first-child               {width:10%;} /*No 열 크기*/
-        #ulTable > li > ul > li:first-child +li           {width:50%;} /*제목 열 크기*/
+        #ulTable > li > ul > li:first-child +li           {width:50%; text-align: left} /*제목 열 크기*/
         #ulTable > li > ul > li:first-child +li+li        {width:15%;} /*작성일 열 크기*/
         #ulTable > li > ul > li:first-child +li+li+li     {width:25%;} /*작성자 열 크기*/
 
@@ -247,7 +260,87 @@
 
         }
 
+        .sidebar {
+            display: block;
+            overflow: hidden;
+            width: 200px;
+            background-color: #000;
+            color: #fff;
+            transition: all 0.5s ease;
+            border-radius: 20px;
+            padding: 10px;
+            box-sizing: border-box;
+            position: relative;
+            top: -40%;
+            left: 80%;
+        }
+        .sidebar ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        .sidebar a, .sidebar > label {
+            display: block;
+            height: 25px;
+            padding: 8px;
+            cursor: pointer;
+            color: #fff;
+            text-decoration: none;
+        }
+
+        .sidebar a:hover {
+            color: #000;
+        }
+        .sidebar ul li:hover, .menu > label:hover {
+            background-color: #fff;
+            color: #000;
+            border-radius: 10px;
+        }
+        .sidebar div {
+            position: absolute;
+            left: 50px;
+            line-height: 1.5;
+            font-size: 1em;
+            font-family: 'Noto Sans KR';
+            padding: 0 0 0 20px;
+        }
+
+        #expand-menu {
+            display: none;
+        }
+        #expand-menu:checked ~ ul {
+            display: block;
+            height: auto;
+        }
+
+        .sidebar ::before {
+            font-family: 'Material Icons';
+            font-size: 1.5em;
+            float: left;
+            clear: left;
+        }
+        .sidebar label::before{ content: '\e5d2'; }
+        .sidebar li:nth-child(1) a::before{ content: '\e7fd'; }
+        .sidebar li:nth-child(2) a::before{ content: '\e55b'; }
+        .sidebar li:nth-child(3) a::before{ content: '\f05f'; }
+        .sidebar li:nth-child(4) a::before{ content: '\e560'; }
+        .sidebar li:nth-child(5) a::before{ content: '\e0b7'; }
+        .sidebar li:nth-child(6) a::before{ content: '\ea08'; }
+        .sidebar li:nth-child(7) a::before{ content: '\ef3d'; }
+
+        @media screen and (max-width:1023px) {
+            .sidebar {
+                width: 60px;
+            }
+        }
+        @media screen and (max-width:560px) {
+            .sidebar #expand-menu:not(:checked) ~ ul {
+                display: none;
+            }
+        }
+
     </style>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
     <title>메인</title>
 </head>
@@ -255,36 +348,14 @@
 <div class="main">
 <div class="header">
     <div class="search">
-            <input type="text" name="search" id="search" placeholder="검색어 입력">
+            <input type="text" name="search" class="searchbar" id="search" placeholder="검색어 입력">
             <input type="image" class="img" src="https://s3.ap-northeast-2.amazonaws.com/cdn.wecode.co.kr/icon/search.png" onclick="search()">
-        <% if(session.getAttribute("user") == null) { %>
-        <button class="menu" id="menuBtn" onclick="location.href='/LoginPage'" value="메뉴">메뉴</button>
-        <% } %>
 
-        <% if(session.getAttribute("user") != null) { %>
-        <button class="menu" id="menuBtn" onclick="location.href='/myPage'">메뉴</button>
-        <button class="admin" id="adminOnly" onclick="window.open('/adminPage','관리자', 'width=1000,height=1200')">관</button>
-        <% } %>
 
     </div>
 
 </div>
 <div class="container">
-
-    <input type="button" onClick="location.href='/fiesta'" value="축제 지도" >
-    <input type="button" onClick="location.href='/gps'" value="주변 시설" >
-    <input type="button" onclick="location.href='/review/reviewList'" value="리뷰 게시판">
-    <% if(session.getAttribute("user") == null) { %>
-    <input type="button" onclick="openChatPopup();" value="지역 채팅">
-    <script>
-        function openChatPopup() {
-                alert("로그인이 필요합니다.");
-        }
-    </script>
-    <% } else {%>
-    <input type="button" onClick="location.href='/chatGroup'" value="지역 채팅" >
-    <% } %>
-    <input type="button" onClick="location.href='/tour/news'" value="여행 뉴스" >
     <div >
         <div style="text-align: center" class="col-md-6">
             <div style="text-align: center" id="mainWrapper">
@@ -345,5 +416,50 @@
 
 </div>
 </div>
+<div class="sidebar">
+    <label for="expand-menu">
+        <div>메뉴</div>
 
+    </label>
+    <input type="checkbox" id="expand-menu" name="expand-menu">
+    <ul>
+        <li>
+            <% if(session.getAttribute("user") == null) { %>
+            <a class="item" id="menuBtn" onclick="location.href='/LoginPage'" value="메뉴"><div>로그인</div></a>
+            <% } %>
+
+            <% if(session.getAttribute("user") != null) { %>
+            <a class="item" id="menuBtn" onclick="location.href='/myPage'"><div>마이 페이지</div></a>
+            <% } %>
+
+        </li>
+        <li>
+            <a class="item" onClick="location.href='/fiesta'" value="축제 지도" ><div>축제 지도</div></a>
+        </li>
+        <li>
+            <a class="item" onClick="location.href='/gps'" value="주변 시설" ><div>주변 시설</div></a>
+        </li>
+        <li><a class="item" onclick="location.href='/review/reviewList'" value="리뷰 게시판"><div>리뷰 게시판</div></a></li>
+        <li>
+            <% if(session.getAttribute("user") == null) { %>
+            <a class="item" onclick="openChatPopup();" value="지역 채팅"><div>지역 채팅</div></a>
+            <script>
+                function openChatPopup() {
+                    alert("로그인이 필요합니다.");
+                }
+            </script>
+            <% } else {%>
+            <a class="item" onClick="location.href='/chatGroup'" value="지역 채팅" ><div>지역 채팅</div></a>
+            <% } %>
+        </li>
+        <li>
+            <a class="item" onClick="location.href='/tour/news'" value="여행 뉴스" ><div>여행 뉴스</div></a>
+        </li>
+        <li>
+            <% if(session.getAttribute("user") != null) { %>
+            <a class="item" id="adminOnly" onclick="window.open('/adminPage','관리자')"><div>관리자</div></a>
+            <% } %>
+        </li>
+    </ul>
+</div>
 </body>

@@ -193,7 +193,7 @@
             사진첨부
             </label><br>
             <input style="display: none;" type="file" id="file" name="file" onchange="readURL(this);">
-            <input type="submit" id="write" value="작성"><input type="button" onclick="location.href='/review/reviewList'" value="취소"
+            <input type="submit" id="write" value="작성"><input type="button" onclick="location.href='/review/reviewList'" value="취소">
         </form>
     </div>
 </div>

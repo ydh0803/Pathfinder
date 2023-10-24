@@ -26,8 +26,8 @@ public class Crawling {
             Elements linkElements = document.select(".card.col_sm6.col_lg4 .card_image a");
 
             for (Element linkElement : linkElements) {
-                String headline = linkElement.select("static/image").attr("alt");
-                String image = linkElement.select("static/image").attr("src");
+                String headline = linkElement.select("img").attr("alt");
+                String image = linkElement.select("img").attr("src");
                 String link = linkElement.attr("href");
 
 

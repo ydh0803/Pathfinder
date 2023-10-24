@@ -428,6 +428,7 @@
         </div>
 
 
+        <a href="/tour/certificateRegForm?title=한국폴리텍대학 서울강서캠퍼스&addr1=서울특별시 강서구 화곡동 우장산로10길 112">인증 테스트</a>
     </div>
 </div>
 </body>

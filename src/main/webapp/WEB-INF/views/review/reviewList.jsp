@@ -61,10 +61,25 @@
     <style>
         .search {
             position: relative;
-            width: 300px;
+            width: 700px;
+            left: 10%;
         }
 
-        input {
+        .searchbar {
+            width: 100%;
+            border: 1px solid #bbb;
+            border-radius: 8px;
+            padding: 10px 12px;
+            font-size: 14px;
+
+        }
+
+        .write {
+            width: 45px;
+            font-size: 14px;
+        }
+
+        .writebtn {
             width: 100%;
             border: 1px solid #bbb;
             border-radius: 8px;
@@ -75,14 +90,23 @@
         .img {
             position: absolute;
             width: 17px;
-            top: 0px;
-            right: 0px;
+            top: 10px;
+            right: 20px;
             margin: 0;
         }
 
         .menu {
             position: absolute;
-            width: 60px;
+            width: 55px;
+            height: 45px;
+            right: -10%;
+        }
+
+        .admin {
+            position: absolute;
+            right: -60px;
+            width: 20px;
+            height: 35px;
         }
 
         @import url(https://fonts.googleapis.com/css?family=Open+Sans:400,700);
@@ -93,7 +117,7 @@
         }
 
         .main {
-            width: 400px;
+            width: 1000px;
             margin: 16px auto;
             font-size: 16px;
         }
@@ -167,16 +191,17 @@
             border-color: #05a;
         }
 
-
         ul, li{
             list-style:none;
             text-align:center;
             padding:0;
             margin:0;
+            width: 800px;
+            left: 10%;
         }
 
         #mainWrapper{
-            width: 80%;
+            width: 100%;
             margin: 0 auto; /*가운데 정렬*/
         }
 
@@ -197,12 +222,14 @@
             text-align:center;
         }
 
+
         #ulTable > li > ul {
             clear:both;
             padding:0px;
             position:relative;
             min-width:40px;
         }
+
         #ulTable > li > ul > li {
             float:left;
             font-size:10pt;
@@ -210,30 +237,25 @@
             vertical-align:baseline;
         }
 
-        #ulTable > li > ul > li:first-child           	{width:10%;} /*No 열 크기*/
-        #ulTable > li > ul > li:first-child +li       	{width:40%;} /*제목 열 크기*/
-        #ulTable > li > ul > li:first-child +li+li   	{width:15%;} /*작성자 열 크기*/
-        #ulTable > li > ul > li:first-child +li+li+li   {width:35%;} /*작성일 열 크기*/
+        #ulTable > li > ul > li:first-child               {width:10%;} /*No 열 크기*/
+        #ulTable > li > ul > li:first-child +li           {width:50%; text-align: left} /*제목 열 크기*/
+        #ulTable > li > ul > li:first-child +li+li        {width:15%;} /*작성일 열 크기*/
+        #ulTable > li > ul > li:first-child +li+li+li     {width:25%;} /*작성자 열 크기*/
 
         #divPaging {
-            padding-top: 20px;
             clear:both;
             margin:0 auto;
-            max-width:1400px;
+            width:220px;
             height:50px;
         }
 
         #divPaging > div {
+            float:left;
             width: 30px;
             margin:0 auto;
             text-align:center;
         }
-        #divPaging > .write {
-            float:left;
-            width: 70px;
-            margin:0 auto;
-            text-align:center;
-        }
+
 
         #liSearchOption {clear:both;}
         #liSearchOption > div {
@@ -244,9 +266,6 @@
 
         }
 
-        .left {
-            text-align : left;
-        }
     </style>
 
     <title>메인</title>
@@ -255,15 +274,22 @@
 <div class="main">
     <div class="header">
         <div class="search">
-            <input type="text" name="search" id="search" placeholder="검색어 입력">
+            <input type="text" name="search" class="searchbar" id="search" placeholder="검색어 입력">
             <input type="image" class="img" src="https://s3.ap-northeast-2.amazonaws.com/cdn.wecode.co.kr/icon/search.png" onclick="search()">
-            <input type="button" class="menu" id="menuBtn" onClick="location.href='LoginPage'" value="메뉴" >
+            <% if(session.getAttribute("user") == null) { %>
+            <button class="menu" id="menuBtn" onclick="location.href='/LoginPage'" value="메뉴">메뉴</button>
+            <% } %>
+
+            <% if(session.getAttribute("user") != null) { %>
+            <button class="menu" id="menuBtn" onclick="location.href='/myPage'">메뉴</button>
+            <% } %>
         </div>
 
 
     </div>
     <div class="container">
-        <a>게시글 목록</a></br>
+
+        </br>
         <ul id ="ulTable">
             <li>
                 <ul>
@@ -302,11 +328,9 @@
             <div id="divPaging">
                 <% if (session.getAttribute("user")!=null){%>
                 <div style="text-align: left" class="write">
-                    <button id="write" onclick="location.href='/review/reviewWrite'" >작성</button>
+                    <button id="write" class="writebtn" onclick="location.href='/review/reviewWrite'">작성</button>
                 </div>
-                <%
-
-                    }%>
+                <% }%>
                 <div style="text-align: center;display: flex">
                     <c:forEach var="num" begin="${pageMaker.startPage}" end="${pageMaker.endPage}">
                         <div><a href="/review/reviewList?pNo=${num}">${num}</a></div>
